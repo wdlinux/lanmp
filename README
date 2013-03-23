@@ -1,0 +1,15 @@
+系统概述
+lanmp一键安装包是wdlinux官网2010年底开始推出的web应用环境的快速简易安装包.
+执行一个脚本，整个环境就安装完成就可使用，快速,方便易用,安全稳定
+lanmp一键安装包是用shell脚本编写,且是开源的,你也可以根据业务需求,做相应的调整,来安装自己所需要的环境.
+lanmp表示的是Linux,apache,nginx,mysql,php的简称,目前支持三种环境安装,即是lamp,lnmp,lnamp
+同时会默认安装zend,eAccelerator,pureftpd等相应加速,优化等软件,还有FTP软件
+
+可选安装如下三个其一,也可都安装,然后通过wdcp后台可切换使用不同的环境
+1 lamp(linux+apache+php+mysql) 有Linux下WEB应用的黄金组合之称
+2 lnmp(linux+nginx+php+mysql) 新流行的一个应用组合,对静态的处理更好
+2 lnamp(linux+nginx+apache+php+mysql),即是nginx+apache组合环境的应用，也即是nginx前端处理静态，图片等，apche处理后台php脚本程序。
+
+nginx在处理静态文件上有着非常好的性能和稳定性，且节省资源，但在处理php的应用上相对不稳定，而apache在处理php的应用上是非常稳定的，也因此，目前比较流行的一个n+a的组合应用应运而生
+
+使用一键安装包,方便,简单,快速.如自己一个个安装,麻烦,还费时,也可能会有些莫名其妙的问题难以解决,当然,一键包的安装也可能会有问题的,但问题会更少,至少不会有输入错误等错误的出现
