@@ -1,0 +1,65 @@
+# mysql conf /etc/my.cnf
+# Created by http://www.wdlinux.cn
+# Last Updated 2010.06.01
+
+[client]
+port            = 3306
+socket          = /tmp/mysql.sock
+[mysqld]
+port            = 3306
+socket          = /tmp/mysql.sock
+skip-external-locking
+back_log = 50
+max_connections = 300
+max_connect_errors = 10
+table_open_cache = 1024
+max_allowed_packet = 16M
+binlog_cache_size = 1M
+max_heap_table_size = 64M
+read_buffer_size = 2M
+read_rnd_buffer_size = 8M
+sort_buffer_size = 2M
+join_buffer_size = 2M
+thread_cache_size = 8
+thread_concurrency = 8
+query_cache_size = 64M
+query_cache_limit = 1M
+ft_min_word_len = 4
+default-storage-engine = MYISAM
+thread_stack = 192K
+transaction_isolation = REPEATABLE-READ
+tmp_table_size = 64M
+#log-bin=mysql-bin
+#binlog_format=mixed
+#server-id = 1
+key_buffer_size = 32M
+bulk_insert_buffer_size = 64M
+myisam_sort_buffer_size = 128M
+myisam_max_sort_file_size = 5G
+myisam_repair_threads = 1
+myisam_recover
+innodb_additional_mem_pool_size = 16M
+innodb_buffer_pool_size = 2G
+innodb_data_file_path = ibdata1:10M:autoextend
+innodb_file_io_threads = 4
+innodb_thread_concurrency = 16
+innodb_flush_log_at_trx_commit = 1
+innodb_log_buffer_size = 8M
+innodb_log_file_size = 256M
+innodb_log_files_in_group = 3
+innodb_max_dirty_pages_pct = 90
+innodb_lock_wait_timeout = 120
+[mysqldump]
+quick
+max_allowed_packet = 16M
+[mysql]
+no-auto-rehash
+[myisamchk]
+key_buffer_size = 256M
+sort_buffer_size = 256M
+read_buffer = 8M
+write_buffer = 8M
+[mysqlhotcopy]
+interactive-timeout
+[mysqld_safe]
+open-files-limit = 8192

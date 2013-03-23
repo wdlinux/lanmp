@@ -1,0 +1,43 @@
+# mysql conf /etc/my.cnf
+# Created by http://www.wdlinux.cn
+# Last Updated 2010.06.01
+
+[client]
+port            = 3306
+socket          = /tmp/mysql.sock
+[mysqld]
+port            = 3306
+socket          = /tmp/mysql.sock
+skip-external-locking
+skip-innodb
+key_buffer_size = 256M
+max_allowed_packet = 1M
+table_open_cache = 256
+sort_buffer_size = 1M
+read_buffer_size = 1M
+read_rnd_buffer_size = 4M
+myisam_sort_buffer_size = 64M
+thread_cache_size = 8
+query_cache_size= 16M
+thread_concurrency = 8
+tmp_table_size = 16M
+max_connections = 300
+wait_timeout = 30
+interactive_timeout = 30
+max_connect_errors = 9
+long_query_time = 1
+#log-bin=mysql-bin
+#binlog_format=mixed
+#server-id       = 1
+[mysqldump]
+quick
+max_allowed_packet = 16M
+[mysql]
+no-auto-rehash
+[myisamchk]
+key_buffer_size = 128M
+sort_buffer_size = 128M
+read_buffer = 2M
+write_buffer = 2M
+[mysqlhotcopy]
+interactive-timeout

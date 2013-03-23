@@ -1,0 +1,27 @@
+# iptables conf /etc/sysconfig/iptables
+# Created by http://www.wdlinux.cn
+# Last Updated 2010.06.01
+
+# Firewall configuration written by system-config-securitylevel
+# Manual customization of this file is not recommended.
+*filter
+:FORWARD ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:RH-Firewall-1-INPUT - [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -j RH-Firewall-1-INPUT
+-A FORWARD -j RH-Firewall-1-INPUT
+-A RH-Firewall-1-INPUT -i lo -j ACCEPT
+-A RH-Firewall-1-INPUT -p icmp --icmp-type any -j ACCEPT
+-A RH-Firewall-1-INPUT -p 50 -j ACCEPT
+-A RH-Firewall-1-INPUT -p 51 -j ACCEPT
+-A RH-Firewall-1-INPUT -p udp -d 224.0.0.251 --dport 5353 -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp -m state -m tcp --dport 22 --state NEW -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp -m state -m tcp --dport 21 --state NEW -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp -m state -m tcp --dport 80 --state NEW -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp -m state -m tcp --dport 8080 --state NEW -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp -m state -m tcp --dport 10240:10260 --state NEW -j ACCEPT
+-A RH-Firewall-1-INPUT -p tcp -m state -m tcp --dport 20000:20500 --state NEW -j ACCEPT
+-A RH-Firewall-1-INPUT -j REJECT --reject-with icmp-host-prohibited
+COMMIT

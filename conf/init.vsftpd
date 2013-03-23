@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+#
+# vsftpd - this script starts and stops the vsftpd daemin
+#
+# chkconfig:   - 85 15
+# description:  vsftpd is an ftp server
+# processname: vsftpd
+# config:      /etc/vsftpd.conf
+# Url http://www.wdlinux.cn
+# Last Updated 2010.08.26 
+
+. /etc/rc.d/init.d/functions
+
+VSFTPD='/www/wdlinux/vsftpd/vsftpd'
+
+start() {
+    [ -x $VSFTPD ] || exit 5
+    echo -n $"Starting $prog: "
+    $VSFTPD >/dev/null 2>&1 &
+    echo_success
+    echo
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killall -9 vsftpd
+    echo_success
+    echo
+}
+
+case "$1" in
+    start)
+        $1
+        ;;
+    stop)
+        $1
+        ;;
+    restart|reload|configtest)
+        stop
+	start 
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|restart}"
+        exit 2
+esac

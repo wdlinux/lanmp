@@ -1,0 +1,106 @@
+#!/bin/bash
+#
+# named           This shell script takes care of starting and stopping
+#                 named (BIND DNS server).
+#
+# chkconfig: - 13 87
+# description: named (BIND) is a Domain Name Server (DNS) \
+# that is used to resolve host names to IP addresses.
+# probe: true
+# Url:http://www.wdlinux.cn
+# QQ:12571192
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+[ -r /etc/sysconfig/network ] && . /etc/sysconfig/network
+
+named="named"
+named_conf="/www/wdlinux/bind/etc/named.conf"
+
+start() {
+	[ -x /www/wdlinux/bind/sbin/named ] || exit 5
+	echo -n $"Starting $named:"
+	if [ -n "`/sbin/pidof -o %PPID $named`" ];then
+		echo -n $"$named:already running"
+		failure
+		echo
+		return 1
+	fi
+	daemon /www/wdlinux/bind/sbin/$named -u named -c $named_conf
+	RETVAL=$?
+	if [ $RETVAL = 0 ];then
+		success
+	else
+		failure
+	fi
+	echo
+	return $RETVAL
+}
+
+stop() {
+	echo -n $"Stopping $named:"
+	/www/wdlinux/bind/sbin/rndc stop >/dev/null 2>&1
+	RETVAL=$?
+	[ "$RETVAL" -eq 0 ] || killproc "$named" -TERM >/dev/null 2>&1
+        RETVAL=$?
+	if [ $RETVAL -eq 0 ];then
+		rm -f /www/wdlinux/bind/var/run/named/named.pid
+	fi;
+	if [ $RETVAL -eq 0 ];then
+		success
+	else
+		failure
+	fi;
+	echo
+	return $RETVAL
+}
+
+restart() {
+	stop
+	sleep 2
+	start
+}
+
+status() {
+	echo -n $"$named: status"
+	/www/wdlinux/bind/sbin/rndc status
+	return $?
+}
+
+reload() {
+	echo -n $"Reloading $named:"
+	p=`/sbin/pidof -o %PPID $named`
+	RETVAL=$?
+	if [ "$RETVAL" -eq 0 ];then
+		/www/wdlinux/bind/sbin/rndc reload >/dev/null 2>&1 || /bin/kill -HUP $p;
+		RETVAL=$?
+	fi
+	[ "$RETVAL" -eq 0 ] && success $"$named reload" || failure $"$named reload"
+	echo
+	return $RETVAL
+}
+
+case "$1" in
+	start)
+                start
+                ;;
+        stop)
+                stop
+                ;;
+	status)
+		status
+		;;
+	reload)
+		reload
+		;;
+        restart)
+                restart
+		;;
+        *)
+                echo $"Usage: $0 {start|stop|status|restart|reload}"
+                exit 2
+esac
+
+exit $?

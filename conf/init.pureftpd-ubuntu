@@ -1,0 +1,70 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          pure-ftpd
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Should-Start:      slapd mysql postgresql-8.3 postgresql-8.4
+# Should-Stop:       slapd mysql postgresql-8.3 postgresql-8.4
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+### END INIT INFO
+#
+# pure-ftpd	starts and stops the pure-ftpd ftp daemon
+#
+# Copyright 2002-2011 by Stefan Hornburg (Racke) <racke@linuxia.de>
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:/www/wdlinux/pureftpd
+NAME=pure-ftpd
+DESC="ftp server"
+
+# load LSB init-functions to get status_of_proc helper
+. /lib/lsb/init-functions
+
+PIDFILE=/var/run/pure-ftpd.pid
+PROG=pure-config.py
+FULLPATH=/www/wdlinux/pureftpd/sbin/$PROG
+CONFFILE=/www/wdlinux/etc/pure-ftpd.conf
+
+test -x $DAEMON || exit 0
+
+set -e
+
+[ -d /var/lock/$NAME ] || mkdir /var/lock/$NAME
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	$FULLPATH $CONFFILE -B -g $PIDFILE
+	RETVAL=$?
+	[ $RETVAL = 0 ] && touch /var/lock/$NAME/$PROG
+	echo
+	;;
+  stop)
+	echo -n "Stopping $DESC: "
+	kill $(cat $PIDFILE)
+	RETVAL=$?
+	[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
+	echo "$NAME."
+	;;
+  restart|force-reload)
+	echo -n "Restarting $DESC: "
+	echo -n "Stopping $DESC: "
+	kill $(cat $PIDFILE)
+	RETVAL=$?
+	[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
+	echo -n "Starting $DESC: "
+	$FULLPATH $CONFFILE -B -g $PIDFILE
+	RETVAL=$?
+	[ $RETVAL = 0 ] && touch /var/lock/$NAME/$PROG
+	echo
+	;;
+  status)
+	status_of_proc -p $PIDFILE $PROG $NAME && exit 0 || exit $?
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
