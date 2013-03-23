@@ -6,19 +6,20 @@ if [ $UID != 0 ];then
 fi
 
 if [ $1 == "un" -o $1 == "uninstall" ];then
-        service httpd stop
-        service nginxd stop
-        service mysqld stop
-        service pureftpd stop
-        service wdapache stop
-        mkdir /www/backup
-        bf=`date +%Y%m%d`
-        tar zcvf /www/backup/mysqlbk_$bf.tar.gz /www/wdlinux/mysql/var
-        rm -fr /www/wdlinux
+    service httpd stop
+    service nginxd stop
+    service mysqld stop
+    service pureftpd stop
+    service wdapache stop
+    mkdir /www/backup
+    bf=$(date +%Y%m%d)
+    tar zcvf /www/backup/mysqlbk_$bf.tar.gz /www/wdlinux/mysql/var
+    rm -fr /www/wdlinux
 	rm -f /tmp/*_ins.txt
-        reboot
+    reboot
 	exit
 fi
+
 chmod 755 lanmp.sh
 chmod 755 wdcp_ins.sh
 ./lanmp.sh | tee lanmp_ins.log
