@@ -1,10 +1,9 @@
 #!/bin/bash
 ###
 if [ $UID != 0 ]; then
-	echo "You must be root to run the install script."
-	exit
+    echo "You must be root to run the install script."
+    exit
 fi
-
 
 if [ $1 == "un" -o $1 == "uninstall" ]; then
     service httpd stop
