@@ -157,10 +157,11 @@ if [ ! -d $IN_DIR ]; then
         /etc/init.d/apparmor stop
         update-rc.d -f apparmor remove
         apt-get remove -y apparmor apparmor-utils
-        #sed -i 's/1000:1000/1010:1010/' /etc/passwd
-        #sed -i 's/:1000:/:1010:/' /etc/group
-        #groupadd mysql
-        useradd --system -d /dev/null -s /sbin/nologin mysql &>>/dev/null
+        ogroup=$(awk -F':' '/x:1000:/ {print $1}' /etc/group)
+        [ -n "$ogroup" ] && groupmod -g 1010 $ogroup
+        ouser=$(awk -F':' '/x:1000:/ {print $1}' /etc/passwd)
+        [ -n "$ouser" ] && usermod -u 1010 -g 1010 $ouser
+        adduser --system --group --home /nonexistent --no-create-home mysql
     else
         setenforce 0
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
@@ -217,8 +218,8 @@ fi
 wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $VSFTPD_DU $PHPMYADMIN_DU
 
 function error {
-        echo "ERROR: $1"
-        exit
+    echo "ERROR: $1"
+    exit
 }
 
 function file_cp {
@@ -246,13 +247,13 @@ function mysql_ins {
     tar zxvf mysql-$MYS_VER.tar.gz > $IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ -f /usr/lib/x86_64-linux-gnu/libncurses.so ]; then
-                #LIBNCU="/usr/lib/x86_64-linux-gnu/libncurses.so"
-                LIBNCU=""
+            #LIBNCU="/usr/lib/x86_64-linux-gnu/libncurses.so"
+            LIBNCU=""
         elif [ -f /usr/lib/i386-linux-gnu/libncurses.so ]; then
-                #LIBNCU="/usr/lib/i386-linux-gnu/libncurses.so"
-                LIBNCU=""
+            #LIBNCU="/usr/lib/i386-linux-gnu/libncurses.so"
+            LIBNCU=""
         else
-                LIBNCU=""
+            LIBNCU=""
         fi
     else
         if [ -f /usr/lib64/libncursesw.so ]; then
