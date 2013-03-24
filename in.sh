@@ -5,7 +5,7 @@ if [ $UID != 0 ]; then
     exit
 fi
 
-if [ $1 == "un" -o $1 == "uninstall" ]; then
+if [ "$1" == "un" -o "$1" == "uninstall" ]; then
     service httpd stop
     service nginxd stop
     service mysqld stop
