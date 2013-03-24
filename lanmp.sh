@@ -100,11 +100,11 @@ if [ $OS_RL == 1 ]; then
         httpd_m=""
         r6=1
     fi
+sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
 fi
 if [ $(uname -m | grep "x86_64") ]; then
     X86=1
 fi
-sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
 
 ###
 if [ $OS_RL == 2 ]; then
