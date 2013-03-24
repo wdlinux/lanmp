@@ -1,11 +1,15 @@
 #!/bin/bash
 ###
-if [ $UID != 0 ];then
+if [ $UID != 0 ]; then
 	echo "You must be root to run the install script."
 	exit
 fi
 
+<<<<<<< HEAD
 if [ $1 == "un" -o $1 == "uninstall" ];then
+=======
+if [ $1 == "un" -o $1 == "uninstall" ]; then
+>>>>>>> NewLightweight
     service httpd stop
     service nginxd stop
     service mysqld stop
