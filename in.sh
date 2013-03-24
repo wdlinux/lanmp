@@ -15,9 +15,9 @@ if [ $1 == "un" -o $1 == "uninstall" ]; then
     bf=$(date +%Y%m%d)
     tar zcvf /www/backup/mysqlbk_$bf.tar.gz /www/wdlinux/mysql/var
     rm -fr /www/wdlinux
-	rm -f /tmp/*_ins.txt
+    rm -f /tmp/*_ins.txt
     reboot
-	exit
+    exit
 fi
 
 chmod 755 lanmp.sh
