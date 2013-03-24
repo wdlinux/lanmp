@@ -3,8 +3,11 @@
 # Author:wdlinux
 # Url http://www.wdlinux.cn
 
-if [ ! -f /usr/bin/gcc ];then
-        yum install -y gcc gcc-c++ make autoconf libtool-ltdl-devel gd-devel freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel sudo bzip2
+if [ ! -f /usr/bin/gcc ]; then
+    yum install -y gcc gcc-c++ make autoconf libtool-ltdl-devel \
+        gd-devel freetype-devel libxml2-devel libjpeg-devel \
+        libpng-devel openssl-devel curl-devel patch \
+        libmcrypt-devel libmhash-devel ncurses-devel sudo bzip2
 fi
 
 cd /tmp
@@ -18,19 +21,19 @@ make
 make install
 echo 
 grep 'no-debug-zts-20060613' /www/wdlinux/etc/php.ini
-if [ $? != 0 ];then
-        echo '' >> /www/wdlinux/etc/php.ini
-        echo 'extension_dir=/www/wdlinux/php/lib/php/extensions/no-debug-zts-20060613' >> /www/wdlinux/etc/php.ini
+if [ $? != 0 ]; then
+    echo '' >> /www/wdlinux/etc/php.ini
+    echo 'extension_dir=/www/wdlinux/php/lib/php/extensions/no-debug-zts-20060613' >> /www/wdlinux/etc/php.ini
 fi
-grep 'pdo_mysql.so' /www/wdlinux/etc/php.ini
-if [ $? != 0 ];then
-	echo '' >> /www/wdlinux/etc/php.ini
-	echo 'extension=pdo_mysql.so' >> /www/wdlinux/etc/php.ini
+grep -q 'pdo_mysql.so' /www/wdlinux/etc/php.ini
+if [ $? != 0 ]; then
+    echo '' >> /www/wdlinux/etc/php.ini
+    echo 'extension=pdo_mysql.so' >> /www/wdlinux/etc/php.ini
 fi
-if [ -d /www/wdlinux/apache ];then
-	service httpd restart
+if [ -d /www/wdlinux/apache ]; then
+    service httpd restart
 else
-	service nginxd restart
+    service nginxd restart
 fi
 echo 
 echo "pdo_mysql install is OK"
