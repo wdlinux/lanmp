@@ -14,11 +14,11 @@ lanmp表示的是Linux,apache,nginx,mysql,php的简称,目前支持三种环境�
 
 可选安装如下三个其一,也可都安装,然后通过wdcp后台可切换使用不同的环境
 
-1. 1 lamp(linux+apache+php+mysql) 有Linux下WEB应用的黄金组合之称
+1. lamp(linux+apache+php+mysql) 有Linux下WEB应用的黄金组合之称
 
-2. 2 lnmp(linux+nginx+php+mysql) 新流行的一个应用组合,对静态的处理更好
+2. lnmp(linux+nginx+php+mysql) 新流行的一个应用组合,对静态的处理更好
 
-3. 3 lnamp(linux+nginx+apache+php+mysql),即是nginx+apache组合环境的应用，
+3. lnamp(linux+nginx+apache+php+mysql),即是nginx+apache组合环境的应用，
 
 也即是nginx前端处理静态，图片等，apche处理后台php脚本程序。
 
@@ -55,15 +55,15 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 功能介绍
 ========
 
-1. 1 安装简单,执行一个脚本,就安装完全部,省去一个个安装,麻烦,还出错
+1. 安装简单,执行一个脚本,就安装完全部,省去一个个安装,麻烦,还出错
 
-2. 2 配置快速,稳定,省去一个个配置,麻烦还可能会出差,不稳定
+2. 配置快速,稳定,省去一个个配置,麻烦还可能会出差,不稳定
 
-3. 3 可自由选择安装lamp,lnmp,lnamp三个同不的环境,或是安装所有环境
+3. 可自由选择安装lamp,lnmp,lnamp三个同不的环境,或是安装所有环境
 
-4. 4 可选安装集成wdcp服务器/虚拟主机管理系统,可方便在线管理服务器,网站,FTP,mysql数据库
+4. 可选安装集成wdcp服务器/虚拟主机管理系统,可方便在线管理服务器,网站,FTP,mysql数据库
 
-5. 5 开源 你可以根据业务需求做相应的调整,来安装自己所需要的环境或升级到相应的版本
+5. 开源 你可以根据业务需求做相应的调整,来安装自己所需要的环境或升级到相应的版本
 
 
 安装说明
@@ -76,11 +76,13 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
 源码编译安装
 
-wget http://dl.wdlinux.cn:5180/lanmp_laster.tar.gz
+    wget http://dl.wdlinux.cn:5180/lanmp_laster.tar.gz
 
-tar zxvf lanmp_laster.tar.gz
+    tar zxvf lanmp_laster.tar.gz
 
-sh in.sh (默认会安装wdcp,如果只要web环境,而不想安装wdcp,这里改为 sh lanmp.sh即可) 
+    sh in.sh
+
+(默认会安装wdcp,如果只要web环境,而不想安装wdcp,这里改为 sh lanmp.sh即可) 
 
 4个可选安装
 
@@ -91,5 +93,7 @@ sh in.sh (默认会安装wdcp,如果只要web环境,而不想安装wdcp,这里�
 卸载(注意备份数据,否则后果自负)
 -------------------------------
 
-sh in.sh uninstall就可以
+    sh in.sh uninstall
+
+就可以
 
