@@ -117,6 +117,7 @@ if [ $OS_RL == 2 ]; then
         mysql-client mysql-server php5 php5-fpm pure-ftpd pure-ftpd-common \
         pure-ftpd-mysql
     apt-get -y autoremove
+    [ -f /etc/mysql/my.cnf ] && mv /etc/mysql/my.cnf /etc/mysql/my.cnf.lanmpsave
     apt-get install -y gcc g++ make autoconf libltdl-dev libgd2-xpm-dev \
         libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
         libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
@@ -302,6 +303,7 @@ function mysql_ins {
     /www/wdlinux/mysql/bin/mysql -uroot -p"wdlinux.cn" -e \
         "use mysql;update user set password=password('wdlinux.cn') where user='root';
         delete from user where user='';
+        DROP DATABASE test;
         drop user ''@'%';flush privileges;"
     ln -s $IN_DIR/mysql/bin/mysql /bin/mysql
     mkdir /var/lib/mysql
