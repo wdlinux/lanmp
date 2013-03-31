@@ -319,7 +319,7 @@ function apache_ins {
     tar zxvf httpd-$APA_VER.tar.gz > $IN_LOG 2>&1
     cd httpd-$APA_VER
     make_clean
-    ./configure --prefix=$IN_DIR/httpd-$APA_VER 
+    ./configure --prefix=$IN_DIR/httpd-$APA_VER \
         --enable-rewrite --enable-deflate --disable-userdir \
         --enable-so --enable-expires --enable-headers \
         --with-included-apr --with-apr=/usr \
