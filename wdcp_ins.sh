@@ -402,9 +402,9 @@ function pureftpd_ins {
 function wdcp_ins {
     [ -f $wdcp_inf ] && return
     cd $IN_SRC
-    tar zxvf wdcp_v2.5.tar.gz -C / >/dev/null 2>&1
+    tar xf wdcp_v2.5.tar.gz -C /
     [ $? != 0 ] && err_exit "wdcp install err"
-    tar zxvf phpmyadmin.tar.gz -C /www/wdlinux/wdcp
+    tar xf phpmyadmin.tar.gz -C /www/wdlinux/wdcp
     file_cp dz7_apache.conf /www/wdlinux/wdcp/data/rewrite/dz7_apache.conf
     file_cp dzx15_apache.conf /www/wdlinux/wdcp/data/rewrite/dzx15_apache.conf
     file_cp dz7_nginx.conf /www/wdlinux/wdcp/data/rewrite/dz7_nginx.conf
@@ -412,11 +412,11 @@ function wdcp_ins {
     ####
     sqlrootpwd="wdlinux.cn"
     mysql="/www/wdlinux/mysql/bin/mysql"
-    wdpwd=`expr substr "$(echo $RANDOM | md5sum)" 1 8`
+    wdpwd=$(expr substr "$(echo $RANDOM | md5sum)" 1 8)
     $mysql -uroot -p"$sqlrootpwd" -e "CREATE database wdcpdb DEFAULT CHARACTER SET GBK;"
     $mysql -uroot -p"$sqlrootpwd" -e "grant SELECT, INSERT, UPDATE, DELETE, CREATE,DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, CREATE VIEW, SHOW VIEW on wdcpdb.* to 'wdcp'@'localhost' identified by '$wdpwd';"
     $mysql -uroot -p"$sqlrootpwd" wdcpdb < /www/wdlinux/wdcp/wdcpdb.sql
-    if [ ! -f /www/wdlinux/wdcp/data/db.inc.php ]; then
+    [ -f /www/wdlinux/wdcp/data/db.inc.php ] ||
         echo "<?
 \$dbhost = 'localhost';
 \$dbuser = 'wdcp';
@@ -425,11 +425,11 @@ function wdcp_ins {
 \$pconnect = 0;
 \$dbcharset = 'gbk';
 ?>" > /www/wdlinux/wdcp/data/db.inc.php
-echo "<?
+    [ -f /www/wdlinux/wdcp/data/dbr.inc.php ] ||
+        echo "<?
 \$sqlrootpw='$sqlrootpwd';
 \$sqlrootpw_en='0';
 ?>" > /www/wdlinux/wdcp/data/dbr.inc.php
-    fi
     sed -i "s/{passwd}/$wdpwd/g" $IN_DIR/etc/pureftpd-mysql.conf
     chown -R wdcpu.wdcpg /www/wdlinux/wdcp/data
     chmod 600 /www/wdlinux/wdcp/data/db.inc.php
