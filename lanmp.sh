@@ -551,6 +551,7 @@ function libiconv_ins {
 function eaccelerator_ins {
     [ -f $eac_inf ] && return
     [ $r6 == 1 ] && return
+    [ $OS_RL = 2 -a $X86 = 1 ] && return
     echo
     echo "installing eaccelerator..."
     cd $IN_SRC
