@@ -52,8 +52,8 @@ conf_inf="/tmp/conf_ins.txt"
 
 ###
 echo "Select Install
-        1 apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
-        2 nginx + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
+    1 apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
+    2 nginx + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
     3 nginx + apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
     4 install all service
     5 don't install is now
@@ -61,9 +61,9 @@ echo "Select Install
 sleep 1
 read -p "Please Input 1,2,3,4,5: " SERVER_ID
 if [ $SERVER_ID == 2 ]; then
-        SERVER="nginx"
+    SERVER="nginx"
 elif [ $SERVER_ID == 1 ]; then
-        SERVER="apache"
+    SERVER="apache"
 elif [ $SERVER_ID == 3 ]; then
     SERVER="na"
 elif [ $SERVER_ID == 4 ]; then
@@ -79,7 +79,7 @@ fi
 # make sure network connection usable.
 ping -c 1 -t 1 www.wdlinux.cn &>>/dev/null
 if [[ $? == 2 ]]; then
-        echo "nameserver 8.8.8.8
+    echo "nameserver 8.8.8.8
 nameserver 202.96.128.68" > /etc/resolv.conf
     echo "dns err"
 fi
@@ -190,9 +190,9 @@ function make_clean {
 
 function wget_down {
     if [ $SOFT_DOWN == 1 ]; then
-    echo "start down..."
+        echo "start down..."
         for i in $*; do
-                [ $(wget -c $i) ] && exit
+            [ $(wget -c $i) ] && exit
         done
     fi
 }
