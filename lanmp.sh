@@ -77,13 +77,13 @@ if grep -qi 'ubuntu' /etc/issue; then
     OS_RL=2
 fi
 # make sure network connection usable.
-ping -c 1 -t 1 www.wdlinux.cn &>>/dev/null
+ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
 if [[ $? == 2 ]]; then
     echo "nameserver 8.8.8.8
 nameserver 202.96.128.68" > /etc/resolv.conf
     echo "dns err"
 fi
-ping -c 1 -t 1 www.wdlinux.cn &>>/dev/null
+ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
 if [[ $? == 2 ]]; then
     echo "dns err"
     exit
@@ -172,10 +172,10 @@ if [ ! -d $IN_DIR ]; then
         chkconfig --level 35 mysqld off
         chkconfig --level 35 sendmail off
         groupadd -g 27 mysql
-        useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql &>>/dev/null
+        useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     fi
     groupadd -g 1000 www
-    useradd -g 1000 -u 1000 -d /dev/null -s /sbin/nologin www &>>/dev/null
+    useradd -g 1000 -u 1000 -d /dev/null -s /sbin/nologin www >/dev/null 2>&1
 fi
 
 cd $IN_SRC
@@ -452,7 +452,7 @@ function php_ins {
         patch -fd php-$PHP_VER -p1 > $IN_LOG 2>&1
     [ $SERVER == "apache" -o $SERVER == "na" ] && NV="--with-apxs2=$IN_DIR/apache/bin/apxs"
     cd php-$PHP_VER/
-    make clean &>>/dev/null
+    make clean >/dev/null 2>&1
     if [ $SERVER == "apache" -o $SERVER == "na" ]; then
         PHP_DIR="apache_php-$PHP_VER"
         PHP_DIRS="apache_php"

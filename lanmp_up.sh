@@ -57,12 +57,12 @@ if grep -qi 'ubuntu' /etc/issue; then
     OS_RL=2
 fi
 
-ping -c 1 -t 1 www.wdlinux.cn &>>/dev/null
+ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
 if [[ $? == 2 ]]; then
     echo "nameserver 8.8.8.8
 nameserver 202.96.128.68" > /etc/resolv.conf
 fi
-ping -c 1 -t 1 www.wdlinux.cn &>>/dev/null
+ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
 if [[ $? == 2 ]]; then
     echo "dns err"
     exit

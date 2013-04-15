@@ -45,7 +45,7 @@ fi
 if [ $(uname -m | grep "x86_64") ]; then
     X86=1
 fi
-ping -c 1 -t 1 www.wdlinux.cn &>>/dev/null
+ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
 if [[ $? == 2 ]]; then
     #echo "nameserver 8.8.8.8" >> /etc/resolv.conf
     echo "dns err"
@@ -77,10 +77,10 @@ if [ ! -d $IN_DIR ]; then
     mkdir -p $IN_DIR/{etc,init.d,wdcp_bk}
     if [ $OS_RL == 2 ]; then
         #groupadd mysql
-        useradd --system -d /dev/null -s /sbin/nologin mysql &>>/dev/null
+        useradd --system -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     else
         groupadd -g 27 mysql
-        useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql &>>/dev/null
+        useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     fi
     groupadd -g 1000 www
     useradd -g 1000 -u 1000 -d /dev/null -s /sbin/nologin www > /dev/null 2>&1
@@ -155,7 +155,7 @@ if [ ! -d /www/wdlinux/wdapache ]; then
         setenforce 0
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
     fi
-    useradd -d /dev/null -s /sbin/nologin mysql &>>/dev/null
+    useradd -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     groupadd -g 999 wdcpg
     useradd -g 999 -u 999 -d /www/wdlinux/wdcp -s /sbin/nologin wdcpu
 fi
