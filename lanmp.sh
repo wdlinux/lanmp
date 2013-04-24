@@ -18,10 +18,10 @@ X86=0
 SOFT_DOWN=0
 
 #soft url and down
-HTTPD_DU="http://apache.freelamp.com/httpd/httpd-2.2.16.tar.gz"
-NGINX_DU="http://nginx.org/download/nginx-0.8.51.tar.gz"
-MYSQL_DU="http://mirrors.sohu.com/mysql/MySQL-5.1/mysql-5.1.50.tar.gz"
-PHP_DU="http://www.php.net/get/php-5.2.14.tar.gz/from/cn.php.net/mirror"
+HTTPD_DU="http://mirror.bjtu.edu.cn/apache/httpd/httpd-2.2.24.tar.gz"
+NGINX_DU="http://nginx.org/download/nginx-1.2.8.tar.gz"
+MYSQL_DU="http://cdn.mysql.com/Downloads/MySQL-5.1/mysql-5.1.69.tar.gz"
+PHP_DU="http://www.php.net/get/php-5.2.17.tar.gz/from/cn.php.net/mirror"
 EACCELERATOR_DU="http://bart.eaccelerator.net/source/0.9.6/eaccelerator-0.9.6.tar.bz2"
 ZEND_DU="http://downloads.zend.com/optimizer/3.3.3/ZendOptimizer-3.3.3-linux-glibc23-i386.tar.gz"
 ZENDX86_DU="http://downloads.zend.com/optimizer/3.3.3/ZendOptimizer-3.3.3-linux-glibc23-x86_64.tar.gz"
@@ -31,11 +31,11 @@ PHPMYADMIN_DU="http://dl.wdlinux.cn:5180/phpMyAdmin-3.3.3-all-languages.tar.gz"
 PCRE_DU="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.10.tar.gz"
 
 ###ver
-MYS_VER="5.1.63"
-NGI_VER="1.0.15"
-APA_VER="2.2.22"
+MYS_VER="5.1.69"
+NGI_VER="1.2.8"
+APA_VER="2.2.24"
 PHP_VER="5.2.17"
-PUR_VER="1.0.35"
+PUR_VER="1.0.36"
 
 mysql_inf="/tmp/mysql_ins.txt"
 nginx_inf="/tmp/nginx_ins.txt"
