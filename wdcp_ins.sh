@@ -76,15 +76,18 @@ hwclock -w
 if [ ! -d $IN_DIR ]; then
     mkdir -p $IN_DIR/{etc,init.d,wdcp_bk}
     if [ $OS_RL == 2 ]; then
-        #groupadd mysql
-        useradd --system -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
+        ogroup=$(awk -F':' '/x:1000:/ {print $1}' /etc/group)
+        [ -n "$ogroup" ] && groupmod -g 1010 $ogroup
+        ouser=$(awk -F':' '/x:1000:/ {print $1}' /etc/passwd)
+        [ -n "$ouser" ] && usermod -u 1010 -g 1010 $ouser
+        adduser --system --group --home /nonexistent --no-create-home mysql
     else
         groupadd -g 27 mysql
         useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     fi
     groupadd -g 1000 www
     useradd -g 1000 -u 1000 -d /dev/null -s /sbin/nologin www > /dev/null 2>&1
-    if [ $OS_RL ==2 ]; then
+    if [ $OS_RL == 2 ]; then
         apt-get remove -y sendmail
     else
         chkconfig --level 35 sendmail off
