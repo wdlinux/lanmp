@@ -58,7 +58,6 @@ echo "Select Install
     4 install all service
     5 don't install is now
 "
-sleep 1
 read -p "Please Input 1,2,3,4,5: " SERVER_ID
 if [ $SERVER_ID == 2 ]; then
     SERVER="nginx"
@@ -71,7 +70,17 @@ elif [ $SERVER_ID == 4 ]; then
 else
     exit
 fi
-
+echo "Select php version:
+    1 php-5.2.17 (default)
+    2 php-5.3.24
+"
+read -p "Please Input 1,2: " PHP_VER_ID
+if [ $PHP_VER_ID == 2 ]; then
+    PHP_VER="5.3.24"
+else
+    PHP_VER="5.2.17"
+fi
+ 
 OS_RL=1
 if grep -qi 'ubuntu' /etc/issue; then
     OS_RL=2
@@ -446,10 +455,12 @@ function php_ins {
         patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch
     fi
     NV=""
-    [ $SERVER == "nginx" ] &&
-        NV="--enable-fastcgi --enable-fpm --with-fpm-conf=$IN_DIR/etc/php-fpm.conf" &&
-        gzip -cd php-$PHP_VER-fpm-0.5.14.diff.gz |
-        patch -fd php-$PHP_VER -p1 > $IN_LOG 2>&1
+    if [ $SERVER == "nginx" ]; then
+        NV="--enable-fastcgi --enable-fpm --with-fpm-conf=$IN_DIR/etc/php-fpm.conf"
+        if [ $PHP_VER == "5.2.17" ]; then
+            gzip -cd php-$PHP_VER-fpm-0.5.14.diff.gz | patch -fd php-$PHP_VER -p1 > $IN_LOG 2>&1
+        fi
+    fi
     [ $SERVER == "apache" -o $SERVER == "na" ] && NV="--with-apxs2=$IN_DIR/apache/bin/apxs"
     cd php-$PHP_VER/
     make clean >/dev/null 2>&1
@@ -810,15 +821,11 @@ function start_srv {
 }
 function in_all {
     na_ins
-    SERVER="nginx"
-    #${SERVER}_ins
-    php_ins
+    SERVER="nginx"; php_ins
     eaccelerator_ins
     zend_ins
     rm -f $php_inf $eac_inf $zend_inf
-    SERVER="apache"
-    #${SERVER}_ins
-    php_ins
+    SERVER="apache"; php_ins
     eaccelerator_ins
     zend_ins
 }
@@ -827,7 +834,7 @@ function in_finsh {
     echo
     echo
     echo
-    echo "      Congratulation ,lanmp install is finshed"
+    echo "      Congratulations ,lanmp install is complete"
     echo "      visit http://ip"
     echo "      more infomation please visit http://www.wdlinux.cn"
     echo

@@ -29,6 +29,13 @@ VSFTPD_DU="http://dl.wdlinux.cn:5180/vsftpd-2.2.2.tar.gz"
 PHPMYADMIN_DU="http://dl.wdlinux.cn:5180/phpMyAdmin-3.3.3-all-languages.tar.gz"
 PCRE_DU="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.10.tar.gz"
 
+# version info
+MYS_VER="5.1.69"
+NGI_VER="1.2.8"
+APA_VER="2.2.24"
+PHP_VER="5.2.17"
+PUR_VER="1.0.36"
+
 mysql_inf="/tmp/mysql_ins.txt"
 wdapache_inf="/tmp/wdapache_ins.txt"
 wdphp_inf="/tmp/wdphp_ins.txt"
@@ -169,7 +176,7 @@ function mysql_ins {
     [ -f $mysql_inf ] && return
     echo "installing mysql..."
     cd $IN_SRC
-    tar zxvf mysql-5.1.63.tar.gz > $IN_LOG 2>&1
+    tar zxvf mysql-$MYS_VER.tar.gz > $IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ -f /usr/lib/x86_64-linux-gnu/libncurses.so ]; then
             LIBNCU="/usr/lib/x86_64-linux-gnu/libncurses.so"
@@ -187,13 +194,13 @@ function mysql_ins {
             LIBNCU=""
         fi
     fi
-    cd mysql-5.1.63/
+    cd mysql-$MYS_VER/
     make_clean
     if [ $OS_RL == 2 ]; then
         LIBS="-lncurses"
     fi
     ./configure \
-        --prefix=$IN_DIR/mysql-5.1.63 \
+        --prefix=$IN_DIR/mysql-$MYS_VER \
         --sysconfdir=$IN_DIR/etc \
         --enable-assembler \
         --enable-thread-safe-client \
@@ -241,8 +248,8 @@ function apache_ins {
     [ -f $wdapache_inf ] && return
     echo "installing apache..."
     cd $IN_SRC
-    tar zxvf httpd-2.0.64.tar.gz > $IN_LOG 2>&1
-    cd httpd-2.0.64
+    tar zxvf httpd-$APA_VER.tar.gz > $IN_LOG 2>&1
+    cd httpd-$APA_VER
     make_clean
     ./configure \
         --prefix=/www/wdlinux/wdapache \
@@ -291,9 +298,9 @@ function php_ins {
     [ -f $wdphp_inf ] && return
     echo "installing php..."
     cd $IN_SRC
-    rm -fr php-5.2.17
-    tar zxvf php-5.2.17.tar.gz > $IN_LOG 2>&1
-    cd php-5.2.17/
+    rm -fr php-$PHP_VER
+    tar zxvf php-$PHP_VER.tar.gz > $IN_LOG 2>&1
+    cd php-$PHP_VER/
     ./configure \
         --prefix=/www/wdlinux/wdphp \
         --with-apxs2=/www/wdlinux/wdapache/bin/apxs \
@@ -330,14 +337,14 @@ function pureftpd_ins {
     [ -f $pureftp_inf ] && return
     echo "prureftpd installing..."
     cd $IN_SRC
-    tar zxvf pure-ftpd-1.0.35.tar.gz
-    cd pure-ftpd-1.0.35/
+    tar zxvf pure-ftpd-$PUR_VER.tar.gz
+    cd pure-ftpd-$PUR_VER/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$IN_DIR/mysql/lib/mysql
     cp -pR /www/wdlinux/mysql/lib/mysql/* /usr/lib/
     if [ $X86 == 1 ]; then
         cp /usr/lib/libmysqlclient.so.16 /usr/lib64/
     fi
-    ./configure --prefix=$IN_DIR/pureftpd-1.0.35 \
+    ./configure --prefix=$IN_DIR/pureftpd-$PUR_VER \
         --with-mysql=/www/wdlinux/mysql \
         --with-quotas \
         --with-cookie \
@@ -358,7 +365,7 @@ function pureftpd_ins {
     [ $? != 0 ] && err_exit "pureftpd make err"
     make install
     [ $? != 0 ] && err_exit "pureftpd makeinstall err"
-    ln -sf $IN_DIR/pureftpd-1.0.35 $IN_DIR/pureftpd
+    ln -sf $IN_DIR/pureftpd-$PUR_VER $IN_DIR/pureftpd
     ln -sf /www/wdlinux/pureftpd/sbin/pure-ftpd /usr/sbin/
     cp configuration-file/pure-config.pl $IN_DIR/pureftpd/sbin/
     chmod 755 $IN_DIR/pureftpd/sbin/pure-config.pl
@@ -447,12 +454,11 @@ function in_finsh {
     echo
     echo
     echo
-    echo "      configuration ,wdcp install is finshed"
+    echo "      configurations, wdcp install is complete"
     echo "      visit http://ip:8080"
     echo "      more infomation please visit http://www.wdlinux.cn"
     echo
 }
-
 
 mysql_ins
 apache_ins
