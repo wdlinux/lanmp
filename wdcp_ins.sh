@@ -32,7 +32,7 @@ PCRE_DU="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.10.tar.gz"
 # version info
 MYS_VER="5.1.69"
 NGI_VER="1.2.8"
-APA_VER="2.2.24"
+APA_VER="2.0.64"
 PHP_VER="5.2.17"
 PUR_VER="1.0.36"
 
