@@ -58,6 +58,7 @@ echo "Select Install
     4 install all service
     5 don't install is now
 "
+sleep 0.1
 read -p "Please Input 1,2,3,4,5: " SERVER_ID
 if [ $SERVER_ID == 2 ]; then
     SERVER="nginx"
@@ -74,6 +75,7 @@ echo "Select php version:
     1 php-5.2.17 (default)
     2 php-5.3.24
 "
+sleep 0.1
 read -p "Please Input 1,2: " PHP_VER_ID
 if [ $PHP_VER_ID == 2 ]; then
     PHP_VER="5.3.24"
