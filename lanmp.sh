@@ -351,8 +351,7 @@ function apache_ins {
     #echo "Include conf/default.conf" >> $IN_DIR/apache/conf/httpd.conf
     #echo "Include conf/wdcp.conf" >> $IN_DIR/apache/conf/httpd.conf
     echo "Include conf/vhost/*.conf" >> $IN_DIR/apache/conf/httpd.conf
-    mkdir $IN_DIR/apache/conf/vhost
-    mkdir $IN_DIR/apache/conf/rewrite
+    mkdir -p $IN_DIR/apache/conf/{vhost,rewrite}
     sed -i '/#ServerName/a\
 ServerName localhost
 ' $IN_DIR/apache/conf/httpd.conf
@@ -396,15 +395,14 @@ function nginx_ins {
     cd nginx-$NGI_VER
     make_clean
     ./configure --user=www --group=www --prefix=$IN_DIR/nginx-$NGI_VER \
-        --with-http_stub_status_module --with-http_ssl_module >$IN_lOG 2>&1
+        --with-http_stub_status_module --with-http_ssl_module >>$IN_lOG 2>&1
     [ $? != 0 ] && err_exit "nginx configure err"
     make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "nginx make err"
     make install >>$IN_lOG 2>&1
     [ $? != 0 ] && err_exit "nginx make install err"
     ln -sf $IN_DIR/nginx-$NGI_VER $IN_DIR/nginx
-    mkdir $IN_DIR/nginx/conf/vhost
-    mkdir $IN_DIR/nginx/conf/rewrite
+    mkdir -p $IN_DIR/nginx/conf/{vhost,rewrite}
     mkdir -p /www/{web/default,web_logs}
     file_cp phpinfo.php /www/web/default/phpinfo.php
     file_cp iProber2.php /www/web/default/iProber2.php
@@ -430,11 +428,11 @@ function nginx_ins {
     file_rm /etc/init.d/nginxd
     ln -sf $IN_DIR/init.d/nginxd /etc/init.d/nginxd
     if [ $OS_RL == 2 ]; then
-        update-rc.d -f nginxd defaults
-        update-rc.d -f nginxd enable 235
+        update-rc.d -f nginxd defaults >>$IN_lOG 2>&1
+        update-rc.d -f nginxd enable 235 >>$IN_lOG 2>&1
     else
-        chkconfig --add nginxd
-        chkconfig --level 35 nginxd on
+        chkconfig --add nginxd >>$IN_lOG 2>&1
+        chkconfig --level 35 nginxd on >>$IN_lOG 2>&1
     fi
     if [ $IN_DIR_ME == 1 ]; then
         sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/init.d/nginxd
@@ -459,7 +457,7 @@ function php_ins {
         else
             ln -s /usr/lib/i386-linux-gnu/libssl.* /usr/lib/
         fi
-        patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch
+        patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch >>$IN_lOG 2>&1
     fi
     NV=""
     if [ $SERVER == "nginx" ]; then
@@ -706,11 +704,11 @@ function pureftpd_ins {
     #sed -i 's/{passwd}/$dbpw/g' $IN_DIR/etc/pureftpd-mysql.conf
     ln -sf $IN_DIR/init.d/pureftpd /etc/init.d/pureftpd
     if [ $OS_RL == 2 ]; then
-        update-rc.d pureftpd defaults
-        update-rc.d pureftpd enable 235
+        update-rc.d pureftpd defaults >>$IN_lOG 2>&1
+        update-rc.d pureftpd enable 235 >>$IN_lOG 2>&1
     else
-        chkconfig --add pureftpd
-        chkconfig --level 35 pureftpd on
+        chkconfig --add pureftpd >>$IN_lOG 2>&1
+        chkconfig --level 35 pureftpd on >>$IN_lOG 2>&1
     fi
     touch /var/log/pureftpd.log
     if [ $OS_RL == 2 ];then
