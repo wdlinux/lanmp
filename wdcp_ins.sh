@@ -8,7 +8,7 @@
 
 IN_PWD=$(pwd)
 IN_SRC=${IN_PWD}/lanmp
-IN_LOG=${IN_SRC}/wdcp_install.log
+LOGPATH=${IN_PWD}/logs
 IN_DIR="/www/wdlinux"
 IN_DIR_ME=0
 SERVER="apache"
@@ -43,6 +43,8 @@ pureftp_inf="/tmp/pureftp_ins.txt"
 wdcp_inf="/tmp/wdcp_ins.txt"
 
 [ -d $IN_SRC ] || mkdir $IN_SRC
+[ -d $LOGPATH ] || mkdir $LOGPATH
+
 OS_RL=1
 grep -qi 'ubuntu' /etc/issue && OS_RL=2
 if [ $OS_RL == 1 ]; then
@@ -172,11 +174,12 @@ fi
 
 # install function
 function mysql_ins {
+    IN_LOG=$LOGPATH/wdcp_mysql_install.log
     echo
     [ -f $mysql_inf ] && return
     echo "installing mysql..."
     cd $IN_SRC
-    tar zxvf mysql-$MYS_VER.tar.gz > $IN_LOG 2>&1
+    tar xf mysql-$MYS_VER.tar.gz >$IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ -f /usr/lib/x86_64-linux-gnu/libncurses.so ]; then
             LIBNCU="/usr/lib/x86_64-linux-gnu/libncurses.so"
@@ -207,11 +210,11 @@ function mysql_ins {
         --with-extra-charsets=complex \
         --with-ssl \
         --with-embedded-server \
-        --with-named-curses-libs=$LIBNCU 
+        --with-named-curses-libs=$LIBNCU >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql make err"
-    make install 
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql make install err"
     ln -sf $IN_DIR/mysql-5.1.63 $IN_DIR/mysql
     if [ -f /etc/my.cnf ]; then
@@ -244,11 +247,12 @@ function mysql_ins {
 
 
 function apache_ins {
+    IN_LOG=$LOGPATH/wdcp_apache_install.log
     echo
     [ -f $wdapache_inf ] && return
     echo "installing apache..."
     cd $IN_SRC
-    tar zxvf httpd-$APA_VER.tar.gz > $IN_LOG 2>&1
+    tar xf httpd-$APA_VER.tar.gz >$IN_LOG 2>&1
     cd httpd-$APA_VER
     make_clean
     ./configure \
@@ -261,11 +265,11 @@ function apache_ins {
         --disable-cgi \
         --disable-imap \
         --enable-rewrite \
-        --enable-so 
+        --enable-so >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdapache configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdapache make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdapache make install err"
     file_cp httpd.conf.wdapache /www/wdlinux/wdapache/conf/httpd.conf
     [ -d /www/wdlinux/init.d ] || mkdir -p /www/wdlinux/init.d
@@ -294,12 +298,13 @@ function apache_ins {
 }
 
 function php_ins {
+    IN_LOG=$LOGPATH/wdcp_php_install.log
     echo
     [ -f $wdphp_inf ] && return
     echo "installing php..."
     cd $IN_SRC
     rm -fr php-$PHP_VER
-    tar zxvf php-$PHP_VER.tar.gz > $IN_LOG 2>&1
+    tar xf php-$PHP_VER.tar.gz >$IN_LOG 2>&1
     cd php-$PHP_VER/
     ./configure \
         --prefix=/www/wdlinux/wdphp \
@@ -307,11 +312,11 @@ function php_ins {
         --with-mysql=/www/wdlinux/mysql \
         --with-curl --with-zlib --enable-ftp --with-gd \
         --enable-gd-native-ttf --enable-mbstring \
-        --enable-zip --without-iconv
+        --enable-zip --without-iconv >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdphp configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdphp make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdphp make install err"
     cp php.ini-dist /www/wdlinux/wdphp/lib/php.ini
     sed -i 's/upload_max_filesize = 2/upload_max_filesize = 20/g' /www/wdlinux/wdphp/lib/php.ini
@@ -332,12 +337,13 @@ extension=php_wdcpm.so' >> /www/wdlinux/wdphp/lib/php.ini
     touch $wdphp_inf
 }
 
-function pureftpd_ins {
+function pureftpd_ins {   
+    IN_LOG=$LOGPATH/wdcp_pureftpd_install.log
     echo
     [ -f $pureftp_inf ] && return
     echo "prureftpd installing..."
     cd $IN_SRC
-    tar zxvf pure-ftpd-$PUR_VER.tar.gz
+    tar xf pure-ftpd-$PUR_VER.tar.gz >$IN_LOG 2>&1
     cd pure-ftpd-$PUR_VER/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$IN_DIR/mysql/lib/mysql
     cp -pR /www/wdlinux/mysql/lib/mysql/* /usr/lib/
@@ -359,11 +365,11 @@ function pureftpd_ins {
         --with-welcomemsg  \
         --with-throttling \
         --with-uploadscript \
-        --with-language=simplified-chinese
+        --with-language=simplified-chinese >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pureftp configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pureftpd make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pureftpd makeinstall err"
     ln -sf $IN_DIR/pureftpd-$PUR_VER $IN_DIR/pureftpd
     ln -sf /www/wdlinux/pureftpd/sbin/pure-ftpd /usr/sbin/

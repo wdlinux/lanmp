@@ -4,12 +4,12 @@
 # Created by wdlinux QQ:12571192
 # Url:http://www.wdlinux.cn
 # 2010.04.08
-# Last Updated 2013.03.23
+# Last Updated 2013.05.26
 # 
 
 IN_PWD=$(pwd)
 IN_SRC=${IN_PWD}/lanmp
-IN_LOG=${IN_SRC}/lanmp_install.log
+LOGPATH=${IN_PWD}/logs
 IN_DIR="/www/wdlinux"
 IN_DIR_ME=0
 SERVER="apache"
@@ -49,6 +49,7 @@ conf_inf="/tmp/conf_ins.txt"
 
 # make sure source files dir exists.
 [ -d $IN_SRC ] || mkdir $IN_SRC
+[ -d $LOGPATH ] || mkdir $LOGPATH
 
 ###
 echo "Select Install
@@ -252,11 +253,12 @@ function file_bk {
 
 # install function
 function mysql_ins {
+    IN_LOG=$LOGPATH/mysql_install.log
     echo
     [ -f $mysql_inf ] && return
     echo "installing mysql..."
     cd $IN_SRC
-    tar zxvf mysql-$MYS_VER.tar.gz > $IN_LOG 2>&1
+    tar xf mysql-$MYS_VER.tar.gz >$IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ -f /usr/lib/x86_64-linux-gnu/libncurses.so ]; then
             #LIBNCU="/usr/lib/x86_64-linux-gnu/libncurses.so"
@@ -284,32 +286,32 @@ function mysql_ins {
         --enable-thread-safe-client \
         --with-extra-charsets=complex \
         --with-ssl \
-        --with-embedded-server $LIBNCU 
+        --with-embedded-server $LIBNCU >>$IN_LOG 2>&1 
     [ $? != 0 ] && err_exit "mysql configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql make err"
-    make install 
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql make install err"
     ln -sf $IN_DIR/mysql-$MYS_VER $IN_DIR/mysql
     [ -f /etc/my.cnf ] && mv /etc/my.cnf /etc/my.cnf.old
     cp support-files/mysql.server $IN_DIR/init.d/mysqld
     file_cp my.cnf $IN_DIR/etc/my.cnf
     ln -sf $IN_DIR/etc/my.cnf /etc/my.cnf
-    $IN_DIR/mysql/bin/mysql_install_db > $IN_LOG 2>&1
+    $IN_DIR/mysql/bin/mysql_install_db >>$IN_LOG 2>&1
     chown -R mysql.mysql $IN_DIR/mysql/var
     chmod 755 $IN_DIR/init.d/mysqld
     ln -sf $IN_DIR/init.d/mysqld /etc/init.d/mysqld
     if [ $OS_RL == 2 ]; then
-        update-rc.d -f mysqld defaults
-        update-rc.d -f mysqld enable 235
+        update-rc.d -f mysqld defaults >>$IN_LOG 2>&1
+        update-rc.d -f mysqld enable 235 >>$IN_LOG 2>&1
     else
-        chkconfig --add mysqld
-        chkconfig --level 35 mysqld on
+        chkconfig --add mysqld >>$IN_lOG 2>&1
+        chkconfig --level 35 mysqld on >>$IN_LOG 2>&1
     fi
     service mysqld start
     echo "PATH=\$PATH:$IN_DIR/mysql/bin" > /etc/profile.d/mysql.sh
     echo "$IN_DIR/mysql" > /etc/ld.so.conf.d/mysql-wdl.conf
-    ldconfig
+    ldconfig >>$IN_LOG 2>&1
     $IN_DIR/mysql/bin/mysqladmin -u root password "wdlinux.cn"
     /www/wdlinux/mysql/bin/mysql -uroot -p"wdlinux.cn" -e \
         "use mysql;update user set password=password('wdlinux.cn') where user='root';
@@ -323,22 +325,23 @@ function mysql_ins {
 }
 
 function apache_ins {
+    IN_LOG=$LOGPATH/apache_install.log
     echo
     [ -f $httpd_inf ] && return
     echo "installing httpd..."
     cd $IN_SRC
-    tar zxvf httpd-$APA_VER.tar.gz > $IN_LOG 2>&1
+    tar xf httpd-$APA_VER.tar.gz >$IN_LOG 2>&1
     cd httpd-$APA_VER
     make_clean
     ./configure --prefix=$IN_DIR/httpd-$APA_VER \
         --enable-rewrite --enable-deflate --disable-userdir \
         --enable-so --enable-expires --enable-headers \
         --with-included-apr --with-apr=/usr \
-        --with-apr-util=/usr --enable-ssl --with-ssl=/usr
+        --with-apr-util=/usr --enable-ssl --with-ssl=/usr >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "apache configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "apache make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "apache make install err"
     ln -sf $IN_DIR/httpd-$APA_VER $IN_DIR/apache
     sed -i 's/User daemon/User www/g' $IN_DIR/apache/conf/httpd.conf
@@ -371,11 +374,11 @@ ServerName localhost
     chmod 755 $IN_DIR/init.d/httpd
     ln -sf $IN_DIR/init.d/httpd /etc/init.d/httpd
     if [ $OS_RL == 2 ]; then
-        update-rc.d httpd defaults
-        update-rc.d httpd enable 235
+        update-rc.d httpd defaults >>$IN_LOG 2>&1
+        update-rc.d httpd enable 235 >>$IN_LOG 2>&1
     else
-        chkconfig --add httpd
-        chkconfig --level 35 httpd on
+        chkconfig --add httpd >>$IN_LOG 2>&1
+        chkconfig --level 35 httpd on >>$IN_LOG 2>&1
     fi
     mkdir -p $IN_DIR/apache/conf/vhost
     [ $IN_DIR_ME == 1 ] && sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/init.d/httpd
@@ -383,20 +386,21 @@ ServerName localhost
 }
 
 function nginx_ins {
+    IN_LOG=$LOGPATH/nginx_install.log
     [ -f $nginx_inf ] && return
     pcre_ins
     echo
     echo "installing nginx..."
     cd $IN_SRC
-    tar zxvf nginx-$NGI_VER.tar.gz > $IN_LOG 2>&1
+    tar xf nginx-$NGI_VER.tar.gz >$IN_LOG 2>&1
     cd nginx-$NGI_VER
     make_clean
     ./configure --user=www --group=www --prefix=$IN_DIR/nginx-$NGI_VER \
-        --with-http_stub_status_module --with-http_ssl_module
+        --with-http_stub_status_module --with-http_ssl_module >$IN_lOG 2>&1
     [ $? != 0 ] && err_exit "nginx configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "nginx make err"
-    make install
+    make install >>$IN_lOG 2>&1
     [ $? != 0 ] && err_exit "nginx make install err"
     ln -sf $IN_DIR/nginx-$NGI_VER $IN_DIR/nginx
     mkdir $IN_DIR/nginx/conf/vhost
@@ -441,13 +445,14 @@ function nginx_ins {
 }
 
 function php_ins {
+    IN_LOG=$LOGPATH/php_install.log
     echo
     [ -f $php_inf ] && return
     libiconv_ins
     echo
     echo "installing php..."
     cd $IN_SRC
-    tar zxvf php-$PHP_VER.tar.gz > $IN_LOG 2>&1
+    tar xf php-$PHP_VER.tar.gz >$IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ $X86 == 1 ]; then
             ln -s /usr/lib/x86_64-linux-gnu/libssl.* /usr/lib/
@@ -460,7 +465,7 @@ function php_ins {
     if [ $SERVER == "nginx" ]; then
         NV="--enable-fastcgi --enable-fpm --with-fpm-conf=$IN_DIR/etc/php-fpm.conf"
         if [ $PHP_VER == "5.2.17" ]; then
-            gzip -cd php-$PHP_VER-fpm-0.5.14.diff.gz | patch -fd php-$PHP_VER -p1 > $IN_LOG 2>&1
+            gzip -cd php-$PHP_VER-fpm-0.5.14.diff.gz | patch -fd php-$PHP_VER -p1 >>$IN_LOG 2>&1
         fi
     fi
     [ $SERVER == "apache" -o $SERVER == "na" ] && NV="--with-apxs2=$IN_DIR/apache/bin/apxs"
@@ -478,16 +483,21 @@ function php_ins {
     fi
     ./configure --prefix=$IN_DIR/$PHP_DIR \
         --with-config-file-path=$IN_DIR/$PHP_DIR/etc \
-        --with-mysql=$IN_DIR/mysql --with-iconv=/usr --with-freetype-dir \
-        --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr \
-        --enable-xml --disable-rpath --enable-discard-path \
-        --enable-inline-optimization --with-curl --enable-mbregex \
-        --enable-mbstring --with-mcrypt=/usr --with-gd --enable-gd-native-ttf \
-        --with-openssl --with-mhash --enable-ftp --enable-sockets --enable-zip $NV
+        --with-mysql=$IN_DIR/mysql --with-iconv=/usr \
+        --with-freetype-dir --with-jpeg-dir \
+        --with-png-dir --with-zlib \
+        --with-libxml-dir=/usr --enable-xml \
+        --disable-rpath --enable-discard-path \
+        --enable-inline-optimization --with-curl \
+        --enable-mbregex --enable-mbstring \
+        --with-mcrypt=/usr --with-gd \
+        --enable-gd-native-ttf --with-openssl \
+        --with-mhash --enable-ftp \
+        --enable-sockets --enable-zip $NV >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "php configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "php make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "php make install err"
     ln -sf $IN_DIR/$PHP_DIR $IN_DIR/$PHP_DIRS
     rm -rf $IN_DIR/php
@@ -529,7 +539,7 @@ function na_ins {
     sed -i 's/NameVirtualHost \*:80/NameVirtualHost \*:88/g' /www/wdlinux/apache/conf/httpd.conf
     sed -i 's/VirtualHost \*:80/VirtualHost \*:88/g' /www/wdlinux/apache/conf/vhost/00000.default.conf
     cd $IN_SRC
-    tar -zxvf mod_rpaf-0.6.tar.gz
+    tar xf mod_rpaf-0.6.tar.gz
     cd mod_rpaf-0.6/
     #/www/wdlinux/apache/bin/apxs -i -c -n mod_rpaf-2.0.so mod_rpaf-2.0.c
     /www/wdlinux/apache/bin/apxs -i -c -a mod_rpaf-2.0.c
@@ -547,40 +557,42 @@ function na_ins {
 }
 
 function libiconv_ins {
+    IN_LOG=$LOGPATH/libiconv_install.log
     echo
     echo "installing libiconv..."
     cd $IN_SRC
-    tar zxvf libiconv-1.14.tar.gz
+    tar xf libiconv-1.14.tar.gz >$IN_LOG 2>&1
     cd libiconv-1.14
-    ./configure --prefix=/usr
+    ./configure --prefix=/usr >>$IN_lOG 2>&1
     [ $? != 0 ] && err_exit "libiconv configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "libiconv make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "libiconv make install err"
     ldconfig
 }
 
 function eaccelerator_ins {
+    IN_LOG=$LOGPATH/eaccelerator_install.log
     [ -f $eac_inf ] && return
     [ $r6 == 1 ] && return
     [ $OS_RL = 2 -a $X86 = 1 ] && return
     echo
     echo "installing eaccelerator..."
     cd $IN_SRC
-    tar jxvf eaccelerator-0.9.5.3.tar.bz2 > $IN_LOG 2>&1
+    tar xf eaccelerator-0.9.5.3.tar.bz2 >$IN_LOG 2>&1
     cd eaccelerator-0.9.5.3/
     make_clean
-    $IN_DIR/php/bin/phpize > $IN_LOG 2>&1
+    $IN_DIR/php/bin/phpize >>$IN_LOG 2>&1
     ./configure --enable-eaccelerator=shared \
         --with-eaccelerator-shared-memory \
-        --with-php-config=$IN_DIR/php/bin/php-config
+        --with-php-config=$IN_DIR/php/bin/php-config >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "eaccelerator configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "eaccelerator make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "eaccelerator make install err"
-    mkdir $IN_DIR/eaccelerator_cache > $IN_LOG 2>&1
+    mkdir $IN_DIR/eaccelerator_cache >$IN_LOG 2>&1
     EA_DIR="$IN_DIR/php/lib/php/extensions/no-debug-zts-20060613"
     ln -s $IN_DIR/php/lib/php/extensions/no-debug-zts-20060613 \
         $IN_DIR/php/lib/php/extensions/no-debug-non-zts-20060613
@@ -604,14 +616,15 @@ eaccelerator.compress_level="9"' >> $IN_DIR/etc/php.ini
 }
 
 function zend_ins {
+    IN_LOG=$LOGPATH/zend_install.log
     echo
     [ -f $zend_inf ] && return
     echo "Zend installing..."
     cd $IN_SRC
     if [ $X86 == "1" ]; then
-        tar zxvf zend_64.tar.gz -C $IN_DIR > $IN_LOG 2>&1
+        tar xf zend_64.tar.gz -C $IN_DIR >$IN_LOG 2>&1
     else
-        tar zxvf zend_32.tar.gz -C $IN_DIR > $IN_LOG 2>&1
+        tar xf zend_32.tar.gz -C $IN_DIR >$IN_LOG 2>&1
     fi
     echo '[Zend]
 zend_extension_manager.optimizer='$IN_DIR'/Zend/lib/Optimizer-3.3.3
@@ -623,27 +636,29 @@ zend_extension_ts='$IN_DIR'/Zend/lib/ZendExtensionManager_TS.so' >> $IN_DIR/etc/
 }
 
 function vsftpd_ins {
+    IN_LOG=$LOGPATH/vsftpd_install.log
     echo
     echo "vsftpd installing..."
     cd $IN_SRC
-    tar zxvf vsftpd-2.3.4.tar.gz > $IN_LOG 2>&1
+    tar xf vsftpd-2.3.4.tar.gz >$IN_LOG 2>&1
     cd vsftpd-2.3.4
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "vsftpd make err"
-    mkdir /usr/share/empty > $IN_LOG 2>&1
-    mkdir -p $IN_DIR/vsftpd > $IN_LOG 2>&1
-    install -m 755 vsftpd $IN_DIR/vsftpd/vsftpd
-    install -m 644 vsftpd.8 /usr/share/man/man8
-    install -m 644 vsftpd.conf.5 /usr/share/man/man5
-    install -m 644 vsftpd.conf $IN_DIR/etc/vsftpd.conf
+    mkdir /usr/share/empty >>$IN_LOG 2>&1
+    mkdir -p $IN_DIR/vsftpd >>$IN_LOG 2>&1
+    install -m 755 vsftpd $IN_DIR/vsftpd/vsftpd >>$IN_LOG 2>&1
+    install -m 644 vsftpd.8 /usr/share/man/man8 >>$IN_LOG 2>&1
+    install -m 644 vsftpd.conf.5 /usr/share/man/man5 >>$IN_LOG 2>&1
+    install -m 644 vsftpd.conf $IN_DIR/etc/vsftpd.conf >>$IN_LOG 2>&1
 }
 
 function pureftpd_ins {
+    IN_LOG=$LOGPATH/pureftpd_install.log
     echo
     [ -f $pureftp_inf ] && return
     echo "prureftpd installing..."
     cd $IN_SRC
-    tar zxvf pure-ftpd-$PUR_VER.tar.gz
+    tar xf pure-ftpd-$PUR_VER.tar.gz >$IN_LOG 2>&1
     cd pure-ftpd-$PUR_VER/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$IN_DIR/mysql/lib/mysql
     cp -pR $IN_DIR/mysql/lib/mysql/* /usr/lib/
@@ -665,11 +680,11 @@ function pureftpd_ins {
         --with-welcomemsg  \
         --with-throttling \
         --with-uploadscript \
-        --with-language=simplified-chinese
+        --with-language=simplified-chinese >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pureftp configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pureftpd make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pureftpd makeinstall err"
     ln -sf $IN_DIR/pureftpd-$PUR_VER $IN_DIR/pureftpd
     ln -sf /www/wdlinux/pureftpd/sbin/pure-ftpd /usr/sbin/
@@ -716,16 +731,17 @@ function pureftpd_ins {
 }
 
 function pcre_ins {
+    IN_LOG=$LOGPATH/pcre_install.log
     echo
     echo "pcre installing..."
     cd $IN_SRC
-    tar zxvf pcre-8.10.tar.gz > $IN_LOG 2>&1
+    tar xf pcre-8.10.tar.gz >$IN_LOG 2>&1
     cd pcre-8.10
-    ./configure --prefix=/usr
+    ./configure --prefix=/usr >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pcre configure err"
-    make
+    make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pcre make err"
-    make install
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "pcre make install err"
 }
 
