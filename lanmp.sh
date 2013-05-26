@@ -305,7 +305,7 @@ function mysql_ins {
         update-rc.d -f mysqld defaults >>$IN_LOG 2>&1
         update-rc.d -f mysqld enable 235 >>$IN_LOG 2>&1
     else
-        chkconfig --add mysqld >>$IN_lOG 2>&1
+        chkconfig --add mysqld >>$IN_LOG 2>&1
         chkconfig --level 35 mysqld on >>$IN_LOG 2>&1
     fi
     service mysqld start
@@ -391,15 +391,17 @@ function nginx_ins {
     echo
     echo "installing nginx..."
     cd $IN_SRC
-    tar xf nginx-$NGI_VER.tar.gz >$IN_LOG 2>&1
+    tar xvf nginx-$NGI_VER.tar.gz >$IN_LOG 2>&1
     cd nginx-$NGI_VER
     make_clean
-    ./configure --user=www --group=www --prefix=$IN_DIR/nginx-$NGI_VER \
-        --with-http_stub_status_module --with-http_ssl_module >>$IN_lOG 2>&1
+    ./configure --user=www --group=www \
+        --prefix=$IN_DIR/nginx-$NGI_VER \
+        --with-http_stub_status_module \
+        --with-http_ssl_module >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "nginx configure err"
     make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "nginx make err"
-    make install >>$IN_lOG 2>&1
+    make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "nginx make install err"
     ln -sf $IN_DIR/nginx-$NGI_VER $IN_DIR/nginx
     mkdir -p $IN_DIR/nginx/conf/{vhost,rewrite}
@@ -428,11 +430,11 @@ function nginx_ins {
     file_rm /etc/init.d/nginxd
     ln -sf $IN_DIR/init.d/nginxd /etc/init.d/nginxd
     if [ $OS_RL == 2 ]; then
-        update-rc.d -f nginxd defaults >>$IN_lOG 2>&1
-        update-rc.d -f nginxd enable 235 >>$IN_lOG 2>&1
+        update-rc.d -f nginxd defaults >>$IN_LOG 2>&1
+        update-rc.d -f nginxd enable 235 >>$IN_LOG 2>&1
     else
-        chkconfig --add nginxd >>$IN_lOG 2>&1
-        chkconfig --level 35 nginxd on >>$IN_lOG 2>&1
+        chkconfig --add nginxd >>$IN_LOG 2>&1
+        chkconfig --level 35 nginxd on >>$IN_LOG 2>&1
     fi
     if [ $IN_DIR_ME == 1 ]; then
         sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/init.d/nginxd
@@ -457,7 +459,7 @@ function php_ins {
         else
             ln -s /usr/lib/i386-linux-gnu/libssl.* /usr/lib/
         fi
-        patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch >>$IN_lOG 2>&1
+        patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch >>$IN_LOG 2>&1
     fi
     NV=""
     if [ $SERVER == "nginx" ]; then
@@ -561,7 +563,7 @@ function libiconv_ins {
     cd $IN_SRC
     tar xf libiconv-1.14.tar.gz >$IN_LOG 2>&1
     cd libiconv-1.14
-    ./configure --prefix=/usr >>$IN_lOG 2>&1
+    ./configure --prefix=/usr >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "libiconv configure err"
     make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "libiconv make err"
@@ -704,11 +706,11 @@ function pureftpd_ins {
     #sed -i 's/{passwd}/$dbpw/g' $IN_DIR/etc/pureftpd-mysql.conf
     ln -sf $IN_DIR/init.d/pureftpd /etc/init.d/pureftpd
     if [ $OS_RL == 2 ]; then
-        update-rc.d pureftpd defaults >>$IN_lOG 2>&1
-        update-rc.d pureftpd enable 235 >>$IN_lOG 2>&1
+        update-rc.d pureftpd defaults >>$IN_LOG 2>&1
+        update-rc.d pureftpd enable 235 >>$IN_LOG 2>&1
     else
-        chkconfig --add pureftpd >>$IN_lOG 2>&1
-        chkconfig --level 35 pureftpd on >>$IN_lOG 2>&1
+        chkconfig --add pureftpd >>$IN_LOG 2>&1
+        chkconfig --level 35 pureftpd on >>$IN_LOG 2>&1
     fi
     touch /var/log/pureftpd.log
     if [ $OS_RL == 2 ];then
