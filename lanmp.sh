@@ -136,11 +136,11 @@ if [ $OS_RL == 2 ]; then
         libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate chkconfig \
         diffutils sendmail iptables unzip
     if [ $X86 == 1 ]; then
-        ln -s /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
-        ln -s /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
+        ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
+        ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
     else
-        ln -s /usr/lib/i386-linux-gnu/libpng* /usr/lib/
-        ln -s /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
+        ln -sf /usr/lib/i386-linux-gnu/libpng* /usr/lib/
+        ln -sf /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
     fi
 else
     rpm --import lanmp/RPM-GPG-KEY.dag.txt
@@ -164,17 +164,17 @@ ntpdate tiger.sina.com.cn
 hwclock -w
 
 if [ ! -d $IN_DIR ]; then
-    mkdir -p $IN_DIR/{etc,init.d,wdcp_bk}
+    mkdir -p $IN_DIR/{etc,init.d,wdcp_bk/conf}
     mkdir -p /www/web
     if [ $OS_RL == 2 ]; then
         /etc/init.d/apparmor stop
         update-rc.d -f apparmor remove
         apt-get remove -y apparmor apparmor-utils
         ogroup=$(awk -F':' '/x:1000:/ {print $1}' /etc/group)
-        [ -n "$ogroup" ] && groupmod -g 1010 $ogroup
+        [ -n "$ogroup" ] && groupmod -g 1010 $ogroup >/dev/null 2>&1
         ouser=$(awk -F':' '/x:1000:/ {print $1}' /etc/passwd)
-        [ -n "$ouser" ] && usermod -u 1010 -g 1010 $ouser
-        adduser --system --group --home /nonexistent --no-create-home mysql
+        [ -n "$ouser" ] && usermod -u 1010 -g 1010 $ouser >/dev/null 2>&1
+        adduser --system --group --home /nonexistent --no-create-home mysql >/dev/null 2>&1
     else
         setenforce 0
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
@@ -186,7 +186,7 @@ if [ ! -d $IN_DIR ]; then
         groupadd -g 27 mysql
         useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     fi
-    groupadd -g 1000 www
+    groupadd -g 1000 www >/dev/null 2>&1
     useradd -g 1000 -u 1000 -d /dev/null -s /sbin/nologin www >/dev/null 2>&1
 fi
 
@@ -196,7 +196,7 @@ cd $IN_SRC
 
 function make_clean {
     if [ $RE_INS == 1 ]; then
-        make clean
+        make clean >/dev/null 2>&1
     fi
 }
 
@@ -318,8 +318,8 @@ function mysql_ins {
         delete from user where user='';
         DROP DATABASE test;
         drop user ''@'%';flush privileges;"
-    ln -s $IN_DIR/mysql/bin/mysql /bin/mysql
-    mkdir /var/lib/mysql
+    ln -sf $IN_DIR/mysql/bin/mysql /bin/mysql
+    mkdir -p /var/lib/mysql
     ln -sf /tmp/mysql.sock /var/lib/mysql/
     touch $mysql_inf
 }
@@ -334,10 +334,12 @@ function apache_ins {
     cd httpd-$APA_VER
     make_clean
     ./configure --prefix=$IN_DIR/httpd-$APA_VER \
-        --enable-rewrite --enable-deflate --disable-userdir \
-        --enable-so --enable-expires --enable-headers \
+        --enable-rewrite --enable-deflate \
+        --disable-userdir --enable-so \
+        --enable-expires --enable-headers \
         --with-included-apr --with-apr=/usr \
-        --with-apr-util=/usr --enable-ssl --with-ssl=/usr >>$IN_LOG 2>&1
+        --with-apr-util=/usr --enable-ssl \
+        --with-ssl=/usr >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "apache configure err"
     make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "apache make err"
@@ -455,17 +457,19 @@ function php_ins {
     tar xf php-$PHP_VER.tar.gz >$IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ $X86 == 1 ]; then
-            ln -s /usr/lib/x86_64-linux-gnu/libssl.* /usr/lib/
+            ln -sf /usr/lib/x86_64-linux-gnu/libssl.* /usr/lib/
         else
-            ln -s /usr/lib/i386-linux-gnu/libssl.* /usr/lib/
+            ln -sf /usr/lib/i386-linux-gnu/libssl.* /usr/lib/
         fi
         patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch >>$IN_LOG 2>&1
     fi
     NV=""
     if [ $SERVER == "nginx" ]; then
-        NV="--enable-fastcgi --enable-fpm --with-fpm-conf=$IN_DIR/etc/php-fpm.conf"
         if [ $PHP_VER == "5.2.17" ]; then
+            NV="--enable-fastcgi --enable-fpm --with-fpm-conf=$IN_DIR/etc/php-fpm.conf"
             gzip -cd php-$PHP_VER-fpm-0.5.14.diff.gz | patch -fd php-$PHP_VER -p1 >>$IN_LOG 2>&1
+        else
+            NV="--enable-fpm --with-fpm-user=www --wich-fpm-group=www"
         fi
     fi
     [ $SERVER == "apache" -o $SERVER == "na" ] && NV="--with-apxs2=$IN_DIR/apache/bin/apxs"
@@ -502,7 +506,11 @@ function php_ins {
     ln -sf $IN_DIR/$PHP_DIR $IN_DIR/$PHP_DIRS
     rm -rf $IN_DIR/php
     ln -sf $IN_DIR/$PHP_DIRS $IN_DIR/php
-    cp php.ini-dist $IN_DIR/$PHP_DIR/etc/php.ini
+    if [ $PHP_VER == "5.2.17" ]; then
+        cp php.ini-dist $IN_DIR/$PHP_DIR/etc/php.ini
+    else
+        cp php.ini-production $IN_DIR/$PHP_DIR/etc/php.ini
+    fi
     chown wdcpu.wdcpg $IN_DIR/$PHP_DIR/etc/php.ini
     ln -sf $IN_DIR/$PHP_DIRS/etc/php.ini $IN_DIR/etc/php.ini
     mkdir -p $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613
@@ -510,7 +518,17 @@ function php_ins {
         $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-non-zts-20060613
     
     if [ $SERVER == "nginx" ]; then
-        ln -sf $IN_DIR/$PHP_DIR/sbin/php-fpm $IN_DIR/init.d/php-fpm
+        if [ $PHP_VER == "5.2.17" ]; then
+            ln -sf $IN_DIR/$PHP_DIR/sbin/php-fpm $IN_DIR/init.d/php-fpm
+            sed -i '/nobody/s#<!--##g' $IN_DIR/etc/php-fpm.conf
+            sed -i '/nobody/s#-->##g' $IN_DIR/etc/php-fpm.conf
+            sed -i 's/>nobody</>www</' $IN_DIR/etc/php-fpm.conf
+        else
+            file_cp sapi/fpm/init.d.php-fpm $IN_DIR/init.d/php-fpm
+            file_cp sapi/fpm/php-fpm.conf $IN_DIR/$PHP_DIR/etc/php-fpm.conf
+            ln -s $IN_DIR/$PHP_DIR/etc/php-fpm.conf $IN_DIR/etc/php-fpm.conf
+        fi
+        
         chmod 755 $IN_DIR/init.d/php-fpm
         ln -sf $IN_DIR/init.d/php-fpm /etc/init.d/php-fpm
         if [ $OS_RL == 2 ]; then
@@ -519,9 +537,6 @@ function php_ins {
             file_cp nginxd.fpm /www/wdlinux/init.d/nginxd
         fi
         chmod 755 /www/wdlinux/init.d/nginxd
-        sed -i '/nobody/s#<!--##g' $IN_DIR/etc/php-fpm.conf
-        sed -i '/nobody/s#-->##g' $IN_DIR/etc/php-fpm.conf
-        sed -i 's/>nobody</>www</' $IN_DIR/etc/php-fpm.conf
     fi
 
     if [ $SERVER_ID == 4 ]; then
@@ -542,7 +557,7 @@ function na_ins {
     tar xf mod_rpaf-0.6.tar.gz
     cd mod_rpaf-0.6/
     #/www/wdlinux/apache/bin/apxs -i -c -n mod_rpaf-2.0.so mod_rpaf-2.0.c
-    /www/wdlinux/apache/bin/apxs -i -c -a mod_rpaf-2.0.c
+    /www/wdlinux/apache/bin/apxs -i -c -a mod_rpaf-2.0.c >/dev/null 2>&1
     file_cp rpaf.conf /www/wdlinux/apache/conf
     file_cp naproxy.conf /www/wdlinux/nginx/conf
     file_cp defaultna.conf $IN_DIR/wdcp_bk/conf/defaultna.conf
