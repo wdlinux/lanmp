@@ -43,6 +43,7 @@ httpd_inf="/tmp/httpd_ins.txt"
 pureftp_inf="/tmp/pureftp_ins.txt"
 php_inf="/tmp/php_ins.txt"
 na_inf="/tmp/na_ins.txt"
+libiconv_inf="/tmp/libiconv_ins.txt"
 eac_inf="/tmp/eac_ins.txt"
 zend_inf="/tmp/zend_ins.txt"
 conf_inf="/tmp/conf_ins.txt"
@@ -469,7 +470,7 @@ function php_ins {
             NV="--enable-fastcgi --enable-fpm --with-fpm-conf=$IN_DIR/etc/php-fpm.conf"
             gzip -cd php-$PHP_VER-fpm-0.5.14.diff.gz | patch -fd php-$PHP_VER -p1 >>$IN_LOG 2>&1
         else
-            NV="--enable-fpm --with-fpm-user=www --wich-fpm-group=www"
+            NV="--enable-fpm --with-fpm-user=www --with-fpm-group=www"
         fi
     fi
     [ $SERVER == "apache" -o $SERVER == "na" ] && NV="--with-apxs2=$IN_DIR/apache/bin/apxs"
@@ -574,6 +575,7 @@ function na_ins {
 function libiconv_ins {
     IN_LOG=$LOGPATH/libiconv_install.log
     echo
+    [ -f $libiconv_inf ] && return
     echo "installing libiconv..."
     cd $IN_SRC
     tar xf libiconv-1.14.tar.gz >$IN_LOG 2>&1
@@ -585,6 +587,7 @@ function libiconv_ins {
     make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "libiconv make install err"
     ldconfig
+    touch $libiconv_inf
 }
 
 function eaccelerator_ins {
