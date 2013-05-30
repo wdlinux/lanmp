@@ -525,8 +525,8 @@ function php_ins {
             sed -i '/nobody/s#-->##g' $IN_DIR/etc/php-fpm.conf
             sed -i 's/>nobody</>www</' $IN_DIR/etc/php-fpm.conf
         else
-            file_cp sapi/fpm/init.d.php-fpm $IN_DIR/init.d/php-fpm
-            file_cp sapi/fpm/php-fpm.conf $IN_DIR/$PHP_DIR/etc/php-fpm.conf
+            /bin/cp -f sapi/fpm/init.d.php-fpm $IN_DIR/init.d/php-fpm
+            /bin/cp -f sapi/fpm/php-fpm.conf $IN_DIR/$PHP_DIR/etc/php-fpm.conf
             ln -s $IN_DIR/$PHP_DIR/etc/php-fpm.conf $IN_DIR/etc/php-fpm.conf
         fi
         
