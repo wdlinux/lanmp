@@ -4,7 +4,7 @@
 # Created by wdlinux QQ:12571192
 # Url:http://www.wdlinux.cn
 # 2010.04.08
-# Last Updated 2013.05.26
+# Last Updated 2013.06.04
 # 
 
 IN_PWD=$(pwd)
@@ -62,13 +62,13 @@ echo "Select Install
 "
 sleep 0.1
 read -p "Please Input 1,2,3,4,5: " SERVER_ID
-if [ $SERVER_ID == 2 ]; then
+if [[ $SERVER_ID == 2 ]]; then
     SERVER="nginx"
-elif [ $SERVER_ID == 1 ]; then
+elif [[ $SERVER_ID == 1 ]]; then
     SERVER="apache"
-elif [ $SERVER_ID == 3 ]; then
+elif [[ $SERVER_ID == 3 ]]; then
     SERVER="na"
-elif [ $SERVER_ID == 4 ]; then
+elif [[ $SERVER_ID == 4 ]]; then
     SERVER="all"
 else
     exit
@@ -79,7 +79,7 @@ echo "Select php version:
 "
 sleep 0.1
 read -p "Please Input 1,2: " PHP_VER_ID
-if [ $PHP_VER_ID == 2 ]; then
+if [[ $PHP_VER_ID == 2 ]]; then
     PHP_VER="5.3.24"
 else
     PHP_VER="5.2.17"
