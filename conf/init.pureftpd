@@ -14,22 +14,23 @@
 RETVAL=0
 
 # Path to the pure-ftp binaries.
-prog=pure-config.pl
-fullpath=/www/wdlinux/pureftpd/sbin/$prog
+prog="pure-ftpd"
+progctl=pure-config.pl
+fullpath=/www/wdlinux/pureftpd/sbin/$progctl
 conf=/www/wdlinux/etc/pure-ftpd.conf
 pureftpwho=/www/wdlinux/sbin/pure-ftpwho
 
 
 start() {
 	echo -n $"Starting $prog: "
-	$fullpath $conf --daemonize
+	$fullpath $conf --daemonize >/dev/null 2>&1
 	RETVAL=$?
 	[ $RETVAL = 0 ] && touch /var/lock/subsys/$prog
 	echo
 }
 stop() {
 	echo -n $"Stopping $prog: "
-	kill $(cat /var/run/pure-ftpd.pid)
+    killproc $prog
 	RETVAL=$?
 	[ $RETVAL = 0 ] && rm -f /var/lock/subsys/$prog
 	echo
