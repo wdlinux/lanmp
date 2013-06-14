@@ -22,6 +22,7 @@ HTTPD_DU="http://mirror.bjtu.edu.cn/apache/httpd/httpd-2.2.24.tar.gz"
 NGINX_DU="http://nginx.org/download/nginx-1.2.9.tar.gz"
 MYSQL_DU="http://cdn.mysql.com/Downloads/MySQL-5.1/mysql-5.1.69.tar.gz"
 PHP_DU="http://www.php.net/get/php-5.2.17.tar.gz/from/cn.php.net/mirror"
+PHP53_DU="http://www.php.net/get/php-5.3.26.tar.gz/from/tw2.php.net/mirror"
 PUREFTP_DU="http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.36.tar.gz"
 EACCELERATOR_DU="http://bart.eaccelerator.net/source/0.9.6/eaccelerator-0.9.6.tar.bz2"
 ZEND_DU="http://downloads.zend.com/optimizer/3.3.3/ZendOptimizer-3.3.3-linux-glibc23-i386.tar.gz"
@@ -76,12 +77,12 @@ else
 fi
 echo "Select php version:
     1 php-5.2.17 (default)
-    2 php-5.3.24
+    2 php-5.3.26
 "
 sleep 0.1
 read -p "Please Input 1,2: " PHP_VER_ID
 if [[ $PHP_VER_ID == 2 ]]; then
-    PHP_VER="5.3.24"
+    PHP_VER="5.3.26"
 else
     PHP_VER="5.2.17"
 fi
