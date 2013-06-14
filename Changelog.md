@@ -72,25 +72,23 @@ http://www.wdlinux.cn/bbs/thread-1356-1-1.html
 
 此次2.0版本的更新发布
 
-1 增加了nginx+apache组合环境的应用，也即是nginx前端处理静态，图片等，apche处理后台php脚本
+1 增加了nginx+apache组合环境的应用，也即是nginx前端处理静态，图片等，apche处理后台php脚本程序。nginx在处理静态文件
 
-程序。nginx在处理静态文件上有着非常好的性能和稳定性，且省节点资源，但在处理php的应用上相对
+上有着非常好的性能和稳定性，且省节点资源，但在处理php的应用上相对没那么稳定，而apache在处理php的应用上是非常稳定的，
 
-没那么稳定，而apache在处理php的应用上是非常稳定的，也因此，目前比较流行的一个n+a的组合应用
+也因此，目前比较流行的一个n+a的组合应用应运而生,只在WdLinux,CentOS,RedHat版本上测试通过，其它Linux版本尚未测试，
 
-应运而生,只在WdLinux,CentOS,RedHat版本上测试通过，其它Linux版本尚未测试，欢迎测试
+欢迎测试
 
-2 将vsftpd服务端软件替换为pureftpd,pureftpd更适合做web服务器上应用的FTP软件，避免web在线生
+2 将vsftpd服务端软件替换为pureftpd,pureftpd更适合做web服务器上应用的FTP软件，避免web在线生成文件与FTP不能互操作的
 
-成文件与FTP不能互操作的问题
+问题
 
-3 同时也更新了最新版本的wdcp2.0，wdcp (WDlinux Control Panel)是一套Linux服务器/虚拟主机管
+3 同时也更新了最新版本的wdcp2.0，wdcp (WDlinux Control Panel)是一套Linux服务器/虚拟主机管理系统，可通过web界面对服
 
-理系统，可通过web界面对服务器进行日常的管理和维护，省去通过终端输命令的烦琐操作和难度，更
+务器进行日常的管理和维护，省去通过终端输命令的烦琐操作和难度，更是降低了使用Linux做web服务器的门槛，让更多人的可以
 
-是降低了使用Linux做web服务器的门槛，让更多人的可以轻松使用Linux做服务器。以及可以管理网站，
-
-FTP，数据库等，包括在线创建，删除，修改等操作，详细功能介绍可查看:
+轻松使用Linux做服务器。以及可以管理网站，FTP，数据库等，包括在线创建，删除，修改等操作，详细功能介绍可查看:
 
 http://www.wdlinux.cn/wdcp
 
