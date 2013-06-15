@@ -52,7 +52,7 @@ if [ $OS_RL == 1 ]; then
     grep -q "release 6" /etc/redhat-release
     R6=$?
 fi
-if [ $(uname -m | grep -q "x86_64") ]; then
+if uname -m | grep -q "x86_64"; then
     X86=1
 fi
 ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1

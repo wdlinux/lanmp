@@ -117,7 +117,7 @@ if [ $OS_RL == 1 ]; then
     fi
     sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
 fi
-if [ $(uname -m | grep "x86_64") ]; then
+if uname -m | grep -q "x86_64"; then
     X86=1
 fi
 
@@ -464,7 +464,9 @@ function php_ins {
         else
             ln -sf /usr/lib/i386-linux-gnu/libssl.* /usr/lib/
         fi
-        patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch >>$IN_LOG 2>&1
+        if [ $PHP_VER = "5.2.17" ]; then
+            patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch >>$IN_LOG 2>&1
+        fi
     fi
     NV=""
     if [ $SERVER == "nginx" ]; then
