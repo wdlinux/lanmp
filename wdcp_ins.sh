@@ -17,10 +17,11 @@ X86=0
 SOFT_DOWN=0
 
 #soft url and down
-HTTPD_DU="http://apache.freelamp.com/httpd/httpd-2.2.16.tar.gz"
-NGINX_DU="http://nginx.org/download/nginx-0.8.51.tar.gz"
-MYSQL_DU="http://mirrors.sohu.com/mysql/MySQL-5.1/mysql-5.1.50.tar.gz"
+HTTPD_DU="http://mirror.bjtu.edu.cn/apache/httpd/httpd-2.2.24.tar.gz"
+NGINX_DU="http://nginx.org/download/nginx-1.2.9.tar.gz"
+MYSQL_DU="http://cdn.mysql.com/Downloads/MySQL-5.1/mysql-5.1.69.tar.gz"
 PHP_DU="http://www.php.net/get/php-5.2.14.tar.gz/from/cn.php.net/mirror"
+PUREFTP_DU="http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.36.tar.gz"
 EACCELERATOR_DU="http://bart.eaccelerator.net/source/0.9.6/eaccelerator-0.9.6.tar.bz2"
 ZEND_DU="http://downloads.zend.com/optimizer/3.3.3/ZendOptimizer-3.3.3-linux-glibc23-i386.tar.gz"
 ZENDX86_DU="http://downloads.zend.com/optimizer/3.3.3/ZendOptimizer-3.3.3-linux-glibc23-x86_64.tar.gz"
@@ -31,8 +32,8 @@ PCRE_DU="ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.10.tar.gz"
 
 # version info
 MYS_VER="5.1.69"
-NGI_VER="1.2.8"
-APA_VER="2.0.64"
+NGI_VER="1.2.9"
+APA_VER="2.2.24"
 PHP_VER="5.2.17"
 PUR_VER="1.0.36"
 
@@ -48,10 +49,10 @@ wdcp_inf="/tmp/wdcp_ins.txt"
 OS_RL=1
 grep -qi 'ubuntu' /etc/issue && OS_RL=2
 if [ $OS_RL == 1 ]; then
-    grep "release 6" /etc/redhat-release
+    grep -q "release 6" /etc/redhat-release
     R6=$?
 fi
-if [ $(uname -m | grep "x86_64") ]; then
+if [ $(uname -m | grep -q "x86_64") ]; then
     X86=1
 fi
 ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
@@ -174,7 +175,7 @@ fi
 
 # install function
 function mysql_ins {
-    IN_LOG=$LOGPATH/wdcp_mysql_install.log
+    local IN_LOG=$LOGPATH/wdcp_mysql_install.log
     echo
     [ -f $mysql_inf ] && return
     echo "installing mysql..."
@@ -247,7 +248,7 @@ function mysql_ins {
 
 
 function apache_ins {
-    IN_LOG=$LOGPATH/wdcp_apache_install.log
+    local IN_LOG=$LOGPATH/wdcp_apache_install.log
     echo
     [ -f $wdapache_inf ] && return
     echo "installing apache..."
@@ -298,7 +299,7 @@ function apache_ins {
 }
 
 function php_ins {
-    IN_LOG=$LOGPATH/wdcp_php_install.log
+    local IN_LOG=$LOGPATH/wdcp_php_install.log
     echo
     [ -f $wdphp_inf ] && return
     echo "installing php..."
@@ -338,7 +339,7 @@ extension=php_wdcpm.so' >> /www/wdlinux/wdphp/lib/php.ini
 }
 
 function pureftpd_ins {   
-    IN_LOG=$LOGPATH/wdcp_pureftpd_install.log
+    local IN_LOG=$LOGPATH/wdcp_pureftpd_install.log
     echo
     [ -f $pureftp_inf ] && return
     echo "prureftpd installing..."

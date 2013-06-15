@@ -256,7 +256,7 @@ function file_bk {
 
 # install function
 function mysql_ins {
-    IN_LOG=$LOGPATH/mysql_install.log
+    local IN_LOG=$LOGPATH/mysql_install.log
     echo
     [ -f $mysql_inf ] && return
     echo "installing mysql..."
@@ -328,7 +328,7 @@ function mysql_ins {
 }
 
 function apache_ins {
-    IN_LOG=$LOGPATH/apache_install.log
+    local IN_LOG=$LOGPATH/apache_install.log
     echo
     [ -f $httpd_inf ] && return
     echo "installing httpd..."
@@ -390,7 +390,7 @@ ServerName localhost
 }
 
 function nginx_ins {
-    IN_LOG=$LOGPATH/nginx_install.log
+    local IN_LOG=$LOGPATH/nginx_install.log
     [ -f $nginx_inf ] && return
     pcre_ins
     echo
@@ -450,7 +450,7 @@ function nginx_ins {
 }
 
 function php_ins {
-    IN_LOG=$LOGPATH/php_install.log
+    local IN_LOG=$LOGPATH/php_install.log
     echo
     [ -f $php_inf ] && return
     libiconv_ins
@@ -575,7 +575,7 @@ function na_ins {
 }
 
 function libiconv_ins {
-    IN_LOG=$LOGPATH/libiconv_install.log
+    local IN_LOG=$LOGPATH/libiconv_install.log
     echo
     [ -f $libiconv_inf ] && return
     echo "installing libiconv..."
@@ -593,9 +593,9 @@ function libiconv_ins {
 }
 
 function eaccelerator_ins {
-    IN_LOG=$LOGPATH/eaccelerator_install.log
+    local IN_LOG=$LOGPATH/eaccelerator_install.log
     [ -f $eac_inf ] && return
-    [ $r6 == 1 ] && return
+    [[ $r6 == 1 ]] && return
     [ $OS_RL = 2 -a $X86 = 1 ] && return
     echo
     echo "installing eaccelerator..."
@@ -636,7 +636,7 @@ eaccelerator.compress_level="9"' >> $IN_DIR/etc/php.ini
 }
 
 function zend_ins {
-    IN_LOG=$LOGPATH/zend_install.log
+    local IN_LOG=$LOGPATH/zend_install.log
     echo
     [ -f $zend_inf ] && return
     echo "Zend installing..."
@@ -656,7 +656,7 @@ zend_extension_ts='$IN_DIR'/Zend/lib/ZendExtensionManager_TS.so' >> $IN_DIR/etc/
 }
 
 function vsftpd_ins {
-    IN_LOG=$LOGPATH/vsftpd_install.log
+    local IN_LOG=$LOGPATH/vsftpd_install.log
     echo
     echo "vsftpd installing..."
     cd $IN_SRC
@@ -673,10 +673,10 @@ function vsftpd_ins {
 }
 
 function pureftpd_ins {
-    IN_LOG=$LOGPATH/pureftpd_install.log
+    local IN_LOG=$LOGPATH/pureftpd_install.log
     echo
     [ -f $pureftp_inf ] && return
-    echo "prureftpd installing..."
+    echo "pureftpd installing..."
     cd $IN_SRC
     tar xf pure-ftpd-$PUR_VER.tar.gz >$IN_LOG 2>&1
     cd pure-ftpd-$PUR_VER/
@@ -751,7 +751,7 @@ function pureftpd_ins {
 }
 
 function pcre_ins {
-    IN_LOG=$LOGPATH/pcre_install.log
+    local IN_LOG=$LOGPATH/pcre_install.log
     echo
     echo "pcre installing..."
     cd $IN_SRC
