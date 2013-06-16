@@ -88,7 +88,7 @@ else
 fi
  
 OS_RL=1
-if grep -qi 'ubuntu' /etc/issue; then
+if grep -qi 'ubuntu\|debian' /etc/issue; then
     OS_RL=2
 fi
 # make sure network connection usable.
@@ -137,7 +137,7 @@ if [ $OS_RL == 2 ]; then
         libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
         libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
         libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate chkconfig \
-        diffutils sendmail iptables unzip
+        diffutils exim4 iptables unzip
     if [ $X86 == 1 ]; then
         ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
         ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/

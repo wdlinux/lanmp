@@ -47,7 +47,7 @@ wdcp_inf="/tmp/wdcp_ins.txt"
 [ -d $LOGPATH ] || mkdir $LOGPATH
 
 OS_RL=1
-grep -qi 'ubuntu' /etc/issue && OS_RL=2
+grep -qi 'ubuntu\|debian' /etc/issue && OS_RL=2
 if [ $OS_RL == 1 ]; then
     grep -q "release 6" /etc/redhat-release
     R6=$?
@@ -217,7 +217,7 @@ function mysql_ins {
     [ $? != 0 ] && err_exit "mysql make err"
     make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql make install err"
-    ln -sf $IN_DIR/mysql-5.1.63 $IN_DIR/mysql
+    ln -sf $IN_DIR/mysql-$MYS_VER $IN_DIR/mysql
     if [ -f /etc/my.cnf ]; then
         mv /etc/my.cnf /etc/my.cnf.old
     fi
