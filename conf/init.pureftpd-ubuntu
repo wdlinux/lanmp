@@ -39,8 +39,8 @@ case "$1" in
   stop)
 	echo -n "Stopping $DESC: "
 	killproc $NAME
-	#RETVAL=$?
-	#[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
+	RETVAL=$?
+	[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
 	echo "$NAME."
 	;;
   restart|force-reload)
