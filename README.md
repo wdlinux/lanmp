@@ -80,7 +80,7 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
     tar zxvf lanmp_laster.tar.gz
 
-    sh in.sh
+    chmod u+x in.sh && ./in.sh
 
 (默认会安装wdcp,如果只要web环境,而不想安装wdcp,这里改为 sh lanmp.sh即可) 
 
@@ -89,6 +89,39 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 * 1,2,3 是安装独立的环境,不可自由切换nginx,apache,nginx+apache应用环境
 
 * 4 是安装所有,即可在后台里自由切换nginx,apache,nginx+apache的应用环境
+
+使用这里提供的最新版本安装脚本
+------------------------------
+
+首先下载原版本lanmp安装包
+
+    wget http://dl.wdlinux.cn:5180/lanmp_laster.tar.gz
+
+    tar xf lanmp_laster.tar.gz
+    
+clone最新版本的脚本
+
+    yum install git (RedHat/CentOS)
+
+    apt-get install git (Ubuntu/Debian)
+
+    git clone https://github.com/wdlinux/lanmp.git lanmp_git
+
+    cd lanmp_git
+
+您还可以切换到最新的开发分支对新功能进行测试
+
+    git checkout -b dev -t origin/dev
+
+使用新版本脚本覆盖掉lanmp的脚本
+
+    /bin/cp -rfp * ../lanmp/
+
+开始安装
+
+    cd ../lanmp/
+
+    chmod u+x in.sh && ./in.sh
 
 卸载(注意备份数据,否则后果自负)
 -------------------------------
