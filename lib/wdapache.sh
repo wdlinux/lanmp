@@ -3,8 +3,9 @@ function wdapache_ins {
     local IN_LOG=$LOGPATH/${logpre}_apache_install.log
     echo
     [ -f $wdapache_inf ] && return
-    echo "installing apache..."
+    echo "installing wdcp apache..."
     cd $IN_SRC
+    rm -fr httpd-$APA_VER
     tar xf httpd-$APA_VER.tar.gz >$IN_LOG 2>&1
     cd httpd-$APA_VER
     make_clean

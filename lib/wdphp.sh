@@ -4,7 +4,7 @@ function wdphp_ins {
     local IN_LOG=$LOGPATH/${logpre}_php_install.log
     echo
     [ -f $wdphp_inf ] && return
-    echo "installing php..."
+    echo "installing wdcp php..."
     cd $IN_SRC
     rm -fr php-$PHP_VER
     tar xf php-$PHP_VER.tar.gz >$IN_LOG 2>&1
