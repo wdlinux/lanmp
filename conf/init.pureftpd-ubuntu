@@ -27,42 +27,35 @@ CONFFILE=/www/wdlinux/etc/pure-ftpd.conf
 
 test -x $DAEMON || exit 0
 
-set -e
-
 [ -d /var/lock/$NAME ] || mkdir /var/lock/$NAME
 case "$1" in
   start)
 	echo -n "Starting $DESC: "
-	$FULLPATH $CONFFILE -B -g $PIDFILE
+	$FULLPATH $CONFFILE -B -g $PIDFILE >/dev/null 2>&1
 	RETVAL=$?
 	[ $RETVAL = 0 ] && touch /var/lock/$NAME/$PROG
 	echo
 	;;
   stop)
 	echo -n "Stopping $DESC: "
-	kill $(cat $PIDFILE)
-	RETVAL=$?
-	[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
+	killproc $NAME
+	#RETVAL=$?
+	#[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
 	echo "$NAME."
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
 	echo -n "Stopping $DESC: "
-	kill $(cat $PIDFILE)
-	RETVAL=$?
-	[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
+	stop
 	echo -n "Starting $DESC: "
-	$FULLPATH $CONFFILE -B -g $PIDFILE
-	RETVAL=$?
-	[ $RETVAL = 0 ] && touch /var/lock/$NAME/$PROG
+	start
 	echo
 	;;
   status)
 	status_of_proc -p $PIDFILE $PROG $NAME && exit 0 || exit $?
 	;;
   *)
-	N=/etc/init.d/$NAME
-	echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+	echo "Usage: service pureftpd {start|stop|restart|force-reload|status}" >&2
 	exit 1
 	;;
 esac
