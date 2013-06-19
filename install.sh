@@ -21,6 +21,6 @@ if [ "$1" == "un" -o "$1" == "uninstall" ]; then
 fi
 
 chmod 755 lanmp.sh
-chmod 755 wdcp_ins.sh
+chmod 755 wdcp.sh
 ./lanmp.sh | tee lanmp_ins.log
-./wdcp_ins.sh | tee wdcp_ins.log
+./wdcp.sh | tee wdcp_ins.log

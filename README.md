@@ -80,7 +80,7 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
     tar zxvf lanmp_laster.tar.gz
 
-    chmod u+x in.sh && ./in.sh
+    chmod u+x install.sh && ./install.sh
 
 (默认会安装wdcp,如果只要web环境,而不想安装wdcp,这里改为 sh lanmp.sh即可) 
 
@@ -121,12 +121,12 @@ clone最新版本的脚本
 
     cd ../lanmp/
 
-    chmod u+x in.sh && ./in.sh
+    chmod u+x install.sh && ./install.sh
 
 卸载(注意备份数据,否则后果自负)
 -------------------------------
 
-    sh in.sh uninstall
+    ./install.sh uninstall
 
 就可以
 

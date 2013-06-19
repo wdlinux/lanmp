@@ -3,8 +3,7 @@
 # Web Server Install Script
 # Created by wdlinux QQ:12571192
 # Url:http://www.wdlinux.cn
-# 2010.04.08
-# Last Updated 2013.06.04
+# Since 2010.04.08
 # 
 
 . lib/common.conf
@@ -71,14 +70,7 @@ if [[ $? == 2 ]]; then
     exit
 fi
 
-uname -a | grep -q "stab"
-if [ $? == 1 ]; then
-    httpd_m="--with-mpm=worker"
-fi
 if [ $OS_RL == 1 ]; then
-    if [ $R6 == 1 ]; then
-        httpd_m=""
-    fi
     sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
 fi
 
