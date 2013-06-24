@@ -117,9 +117,13 @@ clone最新版本的脚本
 
     /bin/cp -rfp * ../lanmp/
 
-开始安装
+下载新版本软件包
 
     cd ../lanmp/
+
+    ./utils/downloadpkg.sh
+
+开始安装
 
     chmod u+x install.sh && ./install.sh
 
