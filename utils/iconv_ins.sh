@@ -3,8 +3,11 @@
 # Author:wdlinux
 # Url http://www.wdlinux.cn
 
-if [ ! -f /usr/bin/gcc ];then
-        yum install -y gcc gcc-c++ make autoconf libtool-ltdl-devel gd-devel freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel sudo bzip2
+if [ ! -f /usr/bin/gcc ]; then
+        yum install -y gcc gcc-c++ make autoconf libtool-ltdl-devel \
+        gd-devel freetype-devel libxml2-devel libjpeg-devel \
+        libpng-devel openssl-devel curl-devel patch libmcrypt-devel \
+        libmhash-devel ncurses-devel sudo bzip2
 fi
 
 cd /tmp

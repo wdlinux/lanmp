@@ -4,8 +4,11 @@
 # Url http://www.wdlinux.cn
 
 ###
-if [ ! -f /usr/bin/gcc ];then
-        yum install -y gcc gcc-c++ make autoconf libtool-ltdl-devel gd-devel freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel sudo bzip2
+if [ ! -f /usr/bin/gcc ]; then
+    yum install -y gcc gcc-c++ make autoconf libtool-ltdl-devel \
+        gd-devel freetype-devel libxml2-devel libjpeg-devel \
+        libpng-devel openssl-devel curl-devel patch libmcrypt-devel \
+        libmhash-devel ncurses-devel sudo bzip2
 fi
 yum install -y zlib-devel
 
@@ -30,17 +33,17 @@ make
 make install
 cd ..
 
-if grep -i 'ubuntu' /etc/issue;then
-wget http://www.wdlinux.cn/conf/init.d/init.memcached-ubuntu -O /www/wdlinux/init.d/memcached
-chmod 755 /www/wdlinux/init.d/memcached
-ln -s /www/wdlinux/init.d/memcached /etc/init.d/memcached
-update-rc.d -f memcached defaults
-update-rc.d -f memcached enable 235
+if grep -i 'ubuntu' /etc/issue; then
+    wget http://www.wdlinux.cn/conf/init.d/init.memcached-ubuntu -O /www/wdlinux/init.d/memcached
+    chmod 755 /www/wdlinux/init.d/memcached
+    ln -s /www/wdlinux/init.d/memcached /etc/init.d/memcached
+    update-rc.d -f memcached defaults
+    update-rc.d -f memcached enable 235
 else
-wget http://www.wdlinux.cn/conf/init.d/init.memcached -O /www/wdlinux/init.d/memcached
-chmod 755 /www/wdlinux/init.d/memcached
-ln -s /www/wdlinux/init.d/memcached /etc/init.d/memcached
-chkconfig --level 35 memcached on
+    wget http://www.wdlinux.cn/conf/init.d/init.memcached -O /www/wdlinux/init.d/memcached
+    chmod 755 /www/wdlinux/init.d/memcached
+    ln -s /www/wdlinux/init.d/memcached /etc/init.d/memcached
+    chkconfig --level 35 memcached on
 fi
 touch /www/wdlinux/etc/memcached.conf
 service memcached start
@@ -55,17 +58,17 @@ make
 make install
 
 grep 'memcache.so' /www/wdlinux/etc/php.ini
-if [ $? != 0 ];then
-echo '
+if [ $? != 0 ]; then
+    echo '
 [memcache]
 extension_dir ="/www/wdlinux/php/lib/php/extensions/no-debug-zts-20060613/"
 extension=memcache.so' >> /www/wdlinux/etc/php.ini
 fi
 
-if [ -d /www/wdlinux/apache ];then
-	service httpd restart
+if [ -d /www/wdlinux/apache ]; then
+    service httpd restart
 else
-	service nginxd restart
+    service nginxd restart
 fi
 
 echo
