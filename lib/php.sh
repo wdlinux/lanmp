@@ -43,6 +43,8 @@ function php_ins {
     ./configure --prefix=$IN_DIR/$PHP_DIR \
         --with-config-file-path=$IN_DIR/$PHP_DIR/etc \
         --with-mysql=$IN_DIR/mysql --with-iconv=/usr \
+        --with-mysqli=$IN_DIR/mysql/bin/mysql_config \
+        --with-pdo-mysql=$IN_DIR/mysql \
         --with-freetype-dir --with-jpeg-dir \
         --with-png-dir --with-zlib \
         --with-libxml-dir=/usr --enable-xml \
@@ -52,6 +54,7 @@ function php_ins {
         --with-mcrypt=/usr --with-gd \
         --enable-gd-native-ttf --with-openssl \
         --with-mhash --enable-ftp \
+        --enable-bcmath --enable-exif \
         --enable-sockets --enable-zip $NV >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "php configure err"
     make >>$IN_LOG 2>&1
