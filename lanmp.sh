@@ -83,13 +83,13 @@ if [ $OS_RL == 2 ]; then
     apt-get remove -y apache2 apache2-utils apache2.2-common apache2.2-bin \
         apache2-mpm-prefork apache2-doc apache2-mpm-worker mysql-common \
         mysql-client mysql-server php5 php5-fpm pure-ftpd pure-ftpd-common \
-        pure-ftpd-mysql
+        pure-ftpd-mysql 2>/dev/null
     apt-get -y autoremove
     [ -f /etc/mysql/my.cnf ] && mv /etc/mysql/my.cnf /etc/mysql/my.cnf.lanmpsave
     apt-get install -y gcc g++ make autoconf libltdl-dev libgd2-xpm-dev \
         libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
         libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
-        libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate chkconfig \
+        libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate \
         diffutils exim4 iptables unzip
     if [ $X86 == 1 ]; then
         ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
@@ -100,11 +100,8 @@ if [ $OS_RL == 2 ]; then
     fi
 else
     rpm --import lanmp/RPM-GPG-KEY.dag.txt
-    if [ $X86 == 1 ]; then
-        rpm -ivh lanmp/rpmforge-release-0.5.2-2.el5.rf.x86_64.rpm
-    else
-        rpm -ivh lanmp/rpmforge-release-0.5.2-2.el5.rf.i386.rpm
-    fi
+    [ $R6 == 1 ] && el="el6" || el="el5"
+    rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm
     yum install -y gcc gcc-c++ make sudo autoconf libtool-ltdl-devel gd-devel \
         freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel \
         curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel bzip2 \
@@ -123,9 +120,9 @@ if [ ! -d $IN_DIR ]; then
     mkdir -p $IN_DIR/{etc,init.d,wdcp_bk/conf}
     mkdir -p /www/web
     if [ $OS_RL == 2 ]; then
-        /etc/init.d/apparmor stop
-        update-rc.d -f apparmor remove
-        apt-get remove -y apparmor apparmor-utils
+        /etc/init.d/apparmor stop >/dev/null 2>&1
+        update-rc.d -f apparmor remove >/dev/null 2>&1
+        apt-get remove -y apparmor apparmor-utils >/dev/null 2>&1
         ogroup=$(awk -F':' '/x:1000:/ {print $1}' /etc/group)
         [ -n "$ogroup" ] && groupmod -g 1010 $ogroup >/dev/null 2>&1
         ouser=$(awk -F':' '/x:1000:/ {print $1}' /etc/passwd)
@@ -134,12 +131,12 @@ if [ ! -d $IN_DIR ]; then
     else
         setenforce 0
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
-        service httpd stop
-        service mysqld stop
-        chkconfig --level 35 httpd off
-        chkconfig --level 35 mysqld off
-        chkconfig --level 35 sendmail off
-        groupadd -g 27 mysql
+        service httpd stop >/dev/null 2>&1
+        service mysqld stop >/dev/null 2>&1
+        chkconfig --level 35 httpd off >/dev/null 2>&1
+        chkconfig --level 35 mysqld off >/dev/null 2>&1
+        chkconfig --level 35 sendmail off >/dev/null 2>&1
+        groupadd -g 27 mysql >/dev/null 2>&1
         useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     fi
     groupadd -g 1000 www >/dev/null 2>&1
