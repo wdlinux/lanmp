@@ -5,6 +5,7 @@ function mysql_ins {
     [ -f $mysql_inf ] && return
     echo "installing mysql,this may take a few minutes,hold on plz..."
     cd $IN_SRC
+    rm -fr mysql-$MYS_VER/
     tar xf mysql-$MYS_VER.tar.gz >$IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ -f /usr/lib/x86_64-linux-gnu/libncurses.so ]; then

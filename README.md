@@ -49,6 +49,8 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
 * Ubuntu 12.04,包括32位,64位
 
+* Debian 6/7,包括32位,64位
+
 以上几个版本均有测试可用,其它版本暂未测试,如你有兴趣参与这个测试,欢迎与我们联系,谢谢
 
 
@@ -80,7 +82,15 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
     tar zxvf lanmp_laster.tar.gz
 
-    chmod u+x install.sh && ./install.sh
+    chmod u+x install.sh
+    
+    ./install.sh
+
+(默认会使用screen管理安装会话，如安装中ssh掉线，只需重新登录ssh，然后执行
+
+    screen -r lanmp
+
+即可)
 
 (默认会安装wdcp,如果只要web环境,而不想安装wdcp,这里改为 sh lanmp.sh即可) 
 
@@ -90,7 +100,7 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
 * 4 是安装所有,即可在后台里自由切换nginx,apache,nginx+apache的应用环境
 
-使用这里提供的最新版本安装脚本
+使用这里(github)提供的最新版本安装脚本
 ------------------------------
 
 首先下载原版本lanmp安装包
@@ -101,9 +111,13 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
     
 clone最新版本的脚本
 
-    yum install git (RedHat/CentOS)
+RedHat/CentOS:
 
-    apt-get install git (Ubuntu/Debian)
+    yum install git
+
+Ubuntu/Debian:
+
+    apt-get install git
 
     git clone https://github.com/wdlinux/lanmp.git lanmp_git
 
@@ -125,7 +139,9 @@ clone最新版本的脚本
 
 开始安装
 
-    chmod u+x install.sh && ./install.sh
+    chmod u+x install.sh
+
+    ./install.sh
 
 卸载(注意备份数据,否则后果自负)
 -------------------------------

@@ -5,6 +5,7 @@ function pureftpd_ins {
     [ -f $pureftp_inf ] && return
     echo "pureftpd installing..."
     cd $IN_SRC
+    rm -fr pure-ftpd-$PUR_VER/
     tar xf pure-ftpd-$PUR_VER.tar.gz >$IN_LOG 2>&1
     cd pure-ftpd-$PUR_VER/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$IN_DIR/mysql/lib/mysql

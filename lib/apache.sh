@@ -5,6 +5,7 @@ function apache_ins {
     [ -f $httpd_inf ] && return
     echo "installing httpd..."
     cd $IN_SRC
+    rm -fr httpd-$APA_VER
     tar xf httpd-$APA_VER.tar.gz >$IN_LOG 2>&1
     cd httpd-$APA_VER
     make_clean

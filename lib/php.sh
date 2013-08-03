@@ -7,6 +7,7 @@ function php_ins {
     echo
     echo "installing php..."
     cd $IN_SRC
+    rm -fr php-$PHP_VER/
     tar xf php-$PHP_VER.tar.gz >$IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
         if [ $X86 == 1 ]; then

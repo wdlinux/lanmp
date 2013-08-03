@@ -4,6 +4,7 @@ function vsftpd_ins {
     echo
     echo "vsftpd installing..."
     cd $IN_SRC
+    rm -fr vsftpd-2.3.4
     tar xf vsftpd-2.3.4.tar.gz >$IN_LOG 2>&1
     cd vsftpd-2.3.4
     make >>$IN_LOG 2>&1

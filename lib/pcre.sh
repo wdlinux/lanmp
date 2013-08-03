@@ -4,6 +4,7 @@ function pcre_ins {
     echo
     echo "pcre installing..."
     cd $IN_SRC
+    rm -fr pcre-$PCRE_VER
     tar xf pcre-$PCRE_VER.tar.gz >$IN_LOG 2>&1
     cd pcre-$PCRE_VER
     ./configure --prefix=/usr >>$IN_LOG 2>&1

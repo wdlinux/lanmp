@@ -6,6 +6,7 @@ function nginx_ins {
     echo
     echo "installing nginx..."
     cd $IN_SRC
+    rm -fr nginx-$NGI_VER
     tar xvf nginx-$NGI_VER.tar.gz >$IN_LOG 2>&1
     cd nginx-$NGI_VER
     make_clean
