@@ -3,7 +3,7 @@ function mysql_ins {
     local IN_LOG=$LOGPATH/${logpre}_mysql_install.log
     echo
     [ -f $mysql_inf ] && return
-    echo "installing mysql..."
+    echo "installing mysql,this may take a few minutes,hold on plz..."
     cd $IN_SRC
     tar xf mysql-$MYS_VER.tar.gz >$IN_LOG 2>&1
     if [ $OS_RL == 2 ]; then
@@ -27,16 +27,19 @@ function mysql_ins {
     fi      
     cd mysql-$MYS_VER/
     make_clean
+    echo "configure in progress ..."
     ./configure --prefix=$IN_DIR/mysql-$MYS_VER \
         --sysconfdir=$IN_DIR/etc \
         --enable-assembler \
         --enable-thread-safe-client \
         --with-extra-charsets=complex \
         --with-ssl \
-        --with-embedded-server $LIBNCU >>$IN_LOG 2>&1 
+        --with-embedded-server $LIBNCU >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql configure err"
+    echo "make in progress ..."
     make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql make err"
+    echo "make install in progress ..."
     make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "mysql make install err"
     ln -sf $IN_DIR/mysql-$MYS_VER $IN_DIR/mysql
@@ -55,6 +58,8 @@ function mysql_ins {
         chkconfig --add mysqld >>$IN_LOG 2>&1
         chkconfig --level 35 mysqld on >>$IN_LOG 2>&1
     fi
+    ln -sf $IN_DIR/mysql/bin/mysql /bin/mysql
+    mkdir -p /var/lib/mysql
     service mysqld start
     echo "PATH=\$PATH:$IN_DIR/mysql/bin" > /etc/profile.d/mysql.sh
     echo "$IN_DIR/mysql" > /etc/ld.so.conf.d/mysql-wdl.conf
@@ -65,8 +70,6 @@ function mysql_ins {
         delete from user where user='';
         DROP DATABASE test;
         drop user ''@'%';flush privileges;"
-    ln -sf $IN_DIR/mysql/bin/mysql /bin/mysql
-    mkdir -p /var/lib/mysql
     ln -sf /tmp/mysql.sock /var/lib/mysql/
     touch $mysql_inf
 }
