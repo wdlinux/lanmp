@@ -51,8 +51,7 @@ ServerName localhost
     chmod 755 $IN_DIR/init.d/httpd
     ln -sf $IN_DIR/init.d/httpd /etc/init.d/httpd
     if [ $OS_RL == 2 ]; then
-        update-rc.d httpd defaults >>$IN_LOG 2>&1
-        update-rc.d httpd enable 235 >>$IN_LOG 2>&1
+        update-rc.d -f httpd defaults >>$IN_LOG 2>&1
     else
         chkconfig --add httpd >>$IN_LOG 2>&1
         chkconfig --level 35 httpd on >>$IN_LOG 2>&1

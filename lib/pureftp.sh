@@ -54,8 +54,7 @@ function pureftpd_ins {
     #sed -i 's/{passwd}/$dbpw/g' $IN_DIR/etc/pureftpd-mysql.conf
     ln -sf $IN_DIR/init.d/pureftpd /etc/init.d/pureftpd
     if [ $OS_RL == 2 ]; then
-        update-rc.d pureftpd defaults >>$IN_LOG 2>&1
-        update-rc.d pureftpd enable 235 >>$IN_LOG 2>&1
+        update-rc.d -f pureftpd defaults >>$IN_LOG 2>&1
     else
         chkconfig --add pureftpd >>$IN_LOG 2>&1
         chkconfig --level 35 pureftpd on >>$IN_LOG 2>&1

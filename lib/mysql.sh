@@ -54,7 +54,6 @@ function mysql_ins {
     ln -sf $IN_DIR/init.d/mysqld /etc/init.d/mysqld
     if [ $OS_RL == 2 ]; then
         update-rc.d -f mysqld defaults >>$IN_LOG 2>&1
-        update-rc.d -f mysqld enable 235 >>$IN_LOG 2>&1
     else
         chkconfig --add mysqld >>$IN_LOG 2>&1
         chkconfig --level 35 mysqld on >>$IN_LOG 2>&1

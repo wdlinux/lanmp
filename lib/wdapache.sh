@@ -35,8 +35,7 @@ function wdapache_ins {
     chmod 755 /www/wdlinux/init.d/wdapache
     ln -s /www/wdlinux/init.d/wdapache /etc/init.d/wdapache
     if [ $OS_RL == 2 ]; then
-        update-rc.d wdapache defaults
-        update-rc.d wdapache enable 235
+        update-rc.d -f wdapache defaults >>$IN_LOG 2>&1
     else
         chkconfig --add wdapache
         chkconfig --level 35 wdapache on
