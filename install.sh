@@ -32,17 +32,32 @@ if grep -qi 'debian\|ubuntu' /etc/issue; then
 else
     type -p screen >/dev/null || yum -y install screen
 fi
-# prepare screen session for install
-screen -d -m -S $SCREEN_NAME -t lanmp -s /bin/bash
-sleep 1.5
-if [ -z "$SCREEN_HARDSTATUS" ]; then
-    SCREEN_HARDSTATUS='%{= .} %-Lw%{= .}%> %n%f %t*%{= .}%+Lw%< %-=%{g}(%{d}%H/%l%{g})'
-fi
-screen -r $SCREEN_NAME -X hardstatus alwayslastline "$SCREEN_HARDSTATUS"
-NL=$(echo -ne '\015')
 chmod 755 lanmp.sh
 chmod 755 wdcp.sh
-screen -S $SCREEN_NAME -p lanmp -X stuff \
-    "(./lanmp.sh|tee lanmp_ins.log);(./wdcp.sh|tee wdcp_ins.log)$NL"
-echo "enter screen session"
-screen -r $SCREEN_NAME
+# prepare screen session for install
+if type -p screen >/dev/null; then
+    screen -d -m -S $SCREEN_NAME -t lanmp -s /bin/bash
+    sleep 1.5
+    if [ -z "$SCREEN_HARDSTATUS" ]; then
+        SCREEN_HARDSTATUS='%{= .} %-Lw%{= .}%> %n%f %t*%{= .}%+Lw%< %-=%{g}(%{d}%H/%l%{g})'
+    fi
+    screen -r $SCREEN_NAME -X hardstatus alwayslastline "$SCREEN_HARDSTATUS"
+    NL=$(echo -ne '\015')
+    screen -S $SCREEN_NAME -p lanmp -X stuff \
+        "(./lanmp.sh|tee lanmp_ins.log);(./wdcp.sh|tee wdcp_ins.log)$NL"
+    echo "enter screen session"
+    screen -r $SCREEN_NAME
+else
+    echo "Cannot find 'screen' command,want to install without screen ?"
+    sleep 0.1
+    read -p "Yes/No" i
+    case $i in
+        yes|Yes|Y|y)
+            ./lanmp.sh|tee lanmp_ins.log
+            ./wdcp.sh|tee wdcp_ins.log
+            ;;
+        *)
+            echo "Please install 'screen' before install lanmp."
+            ;;
+    esac
+fi
