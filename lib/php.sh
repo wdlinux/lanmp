@@ -90,6 +90,19 @@ function php_ins {
         
         chmod 755 $IN_DIR/init.d/php-fpm
         ln -sf $IN_DIR/init.d/php-fpm /etc/init.d/php-fpm
+        if [ $PHP_VER == "5.2.17" ]; then
+            sed -i '1 a \\n### BEGIN INIT INFO \
+# Provides:          php-fpm \
+# Required-Start:    $remote_fs $network \
+# Required-Stop:     $remote_fs $network \
+# Default-Start:     2 3 4 5 \
+# Default-Stop:      0 1 6 \
+# Short-Description: starts php-fpm \
+# Description:       starts the PHP FastCGI Process Manager daemon \
+### END INIT INFO
+
+' $IN_DIR/init.d/php-fpm
+        fi
         if [ $OS_RL == 2 ]; then
             file_cp nginxd.fpm-ubuntu /www/wdlinux/init.d/nginxd
         else
