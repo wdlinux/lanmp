@@ -45,19 +45,21 @@ if type -p screen >/dev/null; then
     NL=$(echo -ne '\015')
     screen -S $SCREEN_NAME -p lanmp -X stuff \
         "(./lanmp.sh|tee lanmp_ins.log);(./wdcp.sh|tee wdcp_ins.log)$NL"
-    echo "enter screen session"
     screen -r $SCREEN_NAME
 else
-    echo "Cannot find 'screen' command,want to install without screen ?"
+    echo "Cannot find 'screen' command,install without screen(default yes)?"
     sleep 0.1
-    read -p "Yes/No" i
+    read -p "(Yes/No): " i
     case $i in
-        yes|Yes|Y|y)
-            ./lanmp.sh|tee lanmp_ins.log
-            ./wdcp.sh|tee wdcp_ins.log
+        no|No|NO|n|N)
+            echo "Please install 'screen' before install lanmp."
+            echo "for ubuntu/debian: apt-get update && apt-get install screen"
+            echo "for CentOS/RHEL: yum update && yum install screen"
+            exit
             ;;
         *)
-            echo "Please install 'screen' before install lanmp."
+            ./lanmp.sh|tee lanmp_ins.log
+            ./wdcp.sh|tee wdcp_ins.log
             ;;
     esac
 fi
