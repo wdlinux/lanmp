@@ -47,12 +47,12 @@ else
 fi
 echo "Select php version:
     1 php-5.2.17 (default)
-    2 php-5.3.26
+    2 php-5.3.27
 "
 sleep 0.1
 read -p "Please Input 1,2: " PHP_VER_ID
 if [[ $PHP_VER_ID == 2 ]]; then
-    PHP_VER="5.3.26"
+    PHP_VER="5.3.27"
 else
     PHP_VER="5.2.17"
 fi
@@ -90,7 +90,7 @@ if [ $OS_RL == 2 ]; then
         libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
         libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
         libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate \
-        diffutils exim4 iptables unzip
+        diffutils exim4 iptables unzip sudo
     if [ $X86 == 1 ]; then
         ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
         ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/

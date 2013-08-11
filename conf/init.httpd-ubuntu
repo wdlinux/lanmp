@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          apache2
+# Provides:          httpd
 # Required-Start:    $local_fs $remote_fs $network $syslog $named
 # Required-Stop:     $local_fs $remote_fs $network $syslog $named
 # Default-Start:     2 3 4 5

@@ -21,7 +21,7 @@ DESC="ftp server"
 . /lib/lsb/init-functions
 
 PIDFILE=/var/run/pure-ftpd.pid
-PROG=pure-config.py
+PROG=pure-config.pl
 FULLPATH=/www/wdlinux/pureftpd/sbin/$PROG
 CONFFILE=/www/wdlinux/etc/pure-ftpd.conf
 

@@ -47,7 +47,6 @@ function nginx_ins {
     ln -sf $IN_DIR/init.d/nginxd /etc/init.d/nginxd
     if [ $OS_RL == 2 ]; then
         update-rc.d -f nginxd defaults >>$IN_LOG 2>&1
-        update-rc.d -f nginxd enable 235 >>$IN_LOG 2>&1
     else
         chkconfig --add nginxd >>$IN_LOG 2>&1
         chkconfig --level 35 nginxd on >>$IN_LOG 2>&1
