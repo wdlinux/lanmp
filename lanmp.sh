@@ -90,7 +90,7 @@ if [ $OS_RL == 2 ]; then
         libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
         libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
         libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate \
-        diffutils exim4 iptables unzip
+        diffutils exim4 iptables unzip sudo
     if [ $X86 == 1 ]; then
         ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
         ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
