@@ -33,7 +33,7 @@ function wdphp_ins {
 extension=php_wdcpm.so' >> /www/wdlinux/wdphp/lib/php.ini
     else
         mkdir -p /www/wdlinux/wdphp/lib/php/extensions/no-debug-zts-20060613
-        file_cp php_wdcpm.so /www/wdlinux/wdphp/lib/php/extensions/no-debug-zts-20060613/
+        file_cp php_wdcpm.so /www/wdlinux/wdphp/lib/php/extensions/no-debug-zts-20060613/php_wdcpm.so
         echo 'extension_dir=/www/wdlinux/wdphp/lib/php/extensions/no-debug-zts-20060613
 extension=php_wdcpm.so' >> /www/wdlinux/wdphp/lib/php.ini
     fi

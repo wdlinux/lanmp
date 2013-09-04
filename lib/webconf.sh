@@ -12,7 +12,7 @@ function conf {
     #ln -sf $IN_DIR/etc/vsftpd.conf /etc/vsftpd.conf
     #chkconfig --add vsftpd
     #chkconfig --level 35 vsftpd on
-    file_cp vhost.sh /bin/
+    file_cp vhost.sh /bin/vhost.sh
     mkdir -p /www/web/default
     if [ $IN_DIR_ME == 1 ]; then
         #sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/rc.d/init.d/vsftpd

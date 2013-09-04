@@ -41,9 +41,9 @@ function pureftpd_ins {
     cp configuration-file/pure-config.py $IN_DIR/pureftpd/sbin/
     chmod 755 $IN_DIR/pureftpd/sbin/pure-config.py
     cd $IN_SRC
-    file_cp pureftpd-mysql.conf $IN_DIR/etc
-    file_cp pureftpd-mysql.conf $IN_DIR/wdcp_bk
-    file_cp pure-ftpd.conf $IN_DIR/etc
+    file_cp pureftpd-mysql.conf $IN_DIR/etc/pureftpd-mysql.conf
+    file_cp pureftpd-mysql.conf $IN_DIR/wdcp_bk/pureftpd-mysql.conf
+    file_cp pure-ftpd.conf $IN_DIR/etc/pure-ftpd.conf
     if [ $OS_RL == 2 ]; then
         file_cp init.pureftpd-ubuntu $IN_DIR/init.d/pureftpd
     else
