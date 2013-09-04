@@ -12,8 +12,8 @@ function na_ins {
     cd mod_rpaf-0.6/
     #/www/wdlinux/apache/bin/apxs -i -c -n mod_rpaf-2.0.so mod_rpaf-2.0.c
     /www/wdlinux/apache/bin/apxs -i -c -a mod_rpaf-2.0.c >/dev/null 2>&1
-    file_cp rpaf.conf /www/wdlinux/apache/conf
-    file_cp naproxy.conf /www/wdlinux/nginx/conf
+    file_cp rpaf.conf /www/wdlinux/apache/conf/rpaf.conf
+    file_cp naproxy.conf /www/wdlinux/nginx/conf/naproxy.conf
     file_cp defaultna.conf $IN_DIR/wdcp_bk/conf/defaultna.conf
     file_cpv defaultna.conf /www/wdlinux/nginx/conf/vhost/00000.default.conf
     file_cp wdlinux_na.php /www/web/default/index.php
