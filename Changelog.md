@@ -1,3 +1,12 @@
+2013-09-15
+----------
+
+1 更新mysqli  pdo_mysql memcached 安装脚本，支持php5.2 5.3
+
+2 升级memcached至1.4.15 ，升级memcache php extension至2.2.7
+
+3 修正安装过程中的部分bug
+
 2013-08-11
 ----------
 
