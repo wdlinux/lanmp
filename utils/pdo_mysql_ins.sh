@@ -3,6 +3,21 @@
 # Author:wdlinux
 # Url http://www.wdlinux.cn
 
+echo "Select php version:
+    1 php-5.2.17 (default)
+    2 php-5.3.27
+"
+sleep 0.1
+read -p "Please Input 1,2: " PHP_VER_ID
+if [[ $PHP_VER_ID == 2 ]]; then
+    PHP_VER="5.3.27"
+    ext_dir="no-debug-non-zts-20090626"
+else
+    PHP_VER="5.2.17"
+    ext_dir="no-debug-zts-20060613"
+fi
+TOP=$(cd $(dirname $0)/.. && pwd)
+
 if [ ! -f /usr/bin/gcc ]; then
     yum install -y gcc gcc-c++ make autoconf libtool-ltdl-devel \
         gd-devel freetype-devel libxml2-devel libjpeg-devel \
@@ -20,10 +35,10 @@ make
 [ $? != 0 ] && exit
 make install
 echo 
-grep 'no-debug-zts-20060613' /www/wdlinux/etc/php.ini
+grep -q "$ext_dir" /www/wdlinux/etc/php.ini
 if [ $? != 0 ]; then
     echo '' >> /www/wdlinux/etc/php.ini
-    echo 'extension_dir=/www/wdlinux/php/lib/php/extensions/no-debug-zts-20060613' >> /www/wdlinux/etc/php.ini
+    echo "extension_dir=/www/wdlinux/php/lib/php/extensions/$ext_dir" >> /www/wdlinux/etc/php.ini
 fi
 grep -q 'pdo_mysql.so' /www/wdlinux/etc/php.ini
 if [ $? != 0 ]; then
