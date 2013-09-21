@@ -28,20 +28,28 @@ CONFFILE=/www/wdlinux/etc/pure-ftpd.conf
 test -x $DAEMON || exit 0
 
 [ -d /var/lock/$NAME ] || mkdir /var/lock/$NAME
-case "$1" in
-  start)
+
+start() {
 	echo -n "Starting $DESC: "
 	$FULLPATH $CONFFILE -B -g $PIDFILE >/dev/null 2>&1
 	RETVAL=$?
 	[ $RETVAL = 0 ] && touch /var/lock/$NAME/$PROG
 	echo
-	;;
-  stop)
+}
+
+stop() {
 	echo -n "Stopping $DESC: "
 	killproc $NAME
 	RETVAL=$?
 	[ $RETVAL = 0 ] && rm -f /var/lock/$NAME/$PROG
 	echo "$NAME."
+}
+case "$1" in
+  start)
+    start
+	;;
+  stop)
+    stop
 	;;
   restart|force-reload)
 	echo -n "Restarting $DESC: "
