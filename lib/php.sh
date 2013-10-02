@@ -70,7 +70,6 @@ function php_ins {
     else
         cp php.ini-production $IN_DIR/$PHP_DIR/etc/php.ini
     fi
-    chown wdcpu.wdcpg $IN_DIR/$PHP_DIR/etc/php.ini
     ln -sf $IN_DIR/$PHP_DIRS/etc/php.ini $IN_DIR/etc/php.ini
     mkdir -p $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613
     ln -s $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613 \
