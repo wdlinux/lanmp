@@ -100,12 +100,20 @@ if [ $OS_RL == 2 ]; then
     fi
 else
     rpm --import lanmp/RPM-GPG-KEY.dag.txt
-    [ $R6 == 1 ] && el="el6" || el="el5"
+    if [ $R6 == 1 ]; then
+        el="el6"
+        syslog=rsyslog
+        mta=postfix
+    else
+        el="el5"
+        syslog=sysklogd
+        mta=sendmail
+    fi
     rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm
     yum install -y gcc gcc-c++ make sudo autoconf libtool-ltdl-devel gd-devel \
         freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel \
         curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel bzip2 \
-        libcap-devel ntp sysklogd diffutils sendmail iptables unzip
+        libcap-devel ntp diffutils iptables unzip $syslog $mta
     if [ $X86 == 1 ]; then
         ln -sf /usr/lib64/libjpeg.so /usr/lib/
         ln -sf /usr/lib64/libpng.so /usr/lib/
