@@ -73,7 +73,8 @@ function wdcp_in_finsh {
 # os_UPDATE - update
 # os_PACKAGE - package type
 # os_CODENAME - vendor's codename for release
-# os_ARCH - arch
+# os_DISTRO - os distro name
+# os_ARCH - arch type
 function GetOSVersion() {
     # Figure out which vendor we are
     if [[ -x $(which lsb_release 2>/dev/null) ]]; then
@@ -119,25 +120,19 @@ function GetOSVersion() {
             os_CODENAME=$(awk '/VERSION=/' /etc/os-release | sed 's/VERSION=//' | sed -r 's/\"|\(|\)//g' | awk '{print $2}')
         fi
     fi
-    os_ARCH=$(uname -m)
-    export os_VENDOR os_RELEASE os_UPDATE os_PACKAGE os_CODENAME os_ARCH
-}
-
-
-# Translate the OS version values into common nomenclature
-# Sets ``DISTRO`` from the ``os_*`` values
-function GetDistro() {
-    GetOSVersion
+    # get os distro name
     if [[ "$os_VENDOR" =~ (Ubuntu) || "$os_VENDOR" =~ (Debian) ]]; then
         # 'Everyone' refers to Ubuntu / Debian releases by the code name adjective
-        DISTRO=$os_CODENAME
+        os_DISTRO=$os_CODENAME
     elif [[ "$os_VENDOR" =~ (Red Hat) || "$os_VENDOR" =~ (CentOS) ]]; then
         # Drop the . release as we assume it's compatible
-        DISTRO="rhel${os_RELEASE::1}"
+        os_DISTRO="rhel${os_RELEASE::1}"
     else
         # Catch-all for now is Vendor + Release + Update
-        DISTRO="$os_VENDOR-$os_RELEASE.$os_UPDATE"
+        os_DISTRO="$os_VENDOR-$os_RELEASE.$os_UPDATE"
     fi
-    export DISTRO
+    # get os arch type
+    os_ARCH=$(uname -m)
+    export os_VENDOR os_RELEASE os_UPDATE os_PACKAGE os_CODENAME os_DISTRO os_ARCH
 }
 
