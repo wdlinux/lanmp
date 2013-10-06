@@ -72,9 +72,6 @@ fi
 
 # Get os version info
 GetOSVersion
-if is_rhel_based; then
-    sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
-fi
 
 ###
 if is_debian_based; then
@@ -88,42 +85,10 @@ if is_debian_based; then
         pure-ftpd-mysql 2>/dev/null
     apt-get -y autoremove
     [ -f /etc/mysql/my.cnf ] && mv /etc/mysql/my.cnf /etc/mysql/my.cnf.lanmpsave
-    apt-get install -y gcc g++ make autoconf libltdl-dev libgd2-xpm-dev \
-        libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
-        libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
-        libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate \
-        diffutils exim4 iptables unzip sudo
-    if [[ $os_ARCH = x86_64 ]]; then
-        ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
-        ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
-    else
-        ln -sf /usr/lib/i386-linux-gnu/libpng* /usr/lib/
-        ln -sf /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
-    fi
-elif is_rhel_based; then
-    rpm --import lanmp/RPM-GPG-KEY.dag.txt
-    if [[ $os_DISTRO = rhel6 ]]; then
-        el="el6"
-        syslog=rsyslog
-        mta=postfix
-    else
-        el="el5"
-        syslog=sysklogd
-        mta=sendmail
-    fi
-    rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm
-    yum install -y gcc gcc-c++ make sudo autoconf libtool-ltdl-devel gd-devel \
-        freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel \
-        curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel bzip2 \
-        libcap-devel ntp diffutils iptables unzip $syslog $mta
-    if [ $X86 == 1 ]; then
-        ln -sf /usr/lib64/libjpeg.so /usr/lib/
-        ln -sf /usr/lib64/libpng.so /usr/lib/
-    fi
-    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 else
-    err_exit "os not supported yet."
+    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 fi
+install_basic_packages
 
 ntpdate tiger.sina.com.cn
 hwclock -w
@@ -169,7 +134,7 @@ if [ $X86 == "1" ]; then
 else
     wget_down $ZEND_DU
 fi
-wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $VSFTPD_DU $PHPMYADMIN_DU
+wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $PUREFTP_DU $PHPMYADMIN_DU
 
 function in_all {
     na_ins
