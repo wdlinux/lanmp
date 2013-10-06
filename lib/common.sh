@@ -73,6 +73,7 @@ function wdcp_in_finsh {
 # os_UPDATE - update
 # os_PACKAGE - package type
 # os_CODENAME - vendor's codename for release
+# os_ARCH - arch
 function GetOSVersion() {
     # Figure out which vendor we are
     if [[ -x $(which lsb_release 2>/dev/null) ]]; then
@@ -118,7 +119,8 @@ function GetOSVersion() {
             os_CODENAME=$(awk '/VERSION=/' /etc/os-release | sed 's/VERSION=//' | sed -r 's/\"|\(|\)//g' | awk '{print $2}')
         fi
     fi
-    export os_VENDOR os_RELEASE os_UPDATE os_PACKAGE os_CODENAME
+    os_ARCH=$(uname -m)
+    export os_VENDOR os_RELEASE os_UPDATE os_PACKAGE os_CODENAME os_ARCH
 }
 
 
