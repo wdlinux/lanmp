@@ -3,8 +3,9 @@
 # Wdcp Server Install Script
 # Created by wdlinux QQ:12571192
 # Url:http://www.wdlinux.cn
-# Last Updated 2013.03.24
-# 
+# Since 2010.04.08
+#
+
 
 . lib/common.conf
 . lib/common.sh
