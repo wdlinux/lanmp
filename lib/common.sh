@@ -159,3 +159,11 @@ function is_debian_based() {
     fi
 }
 
+function enable_service() {
+    if is_debian_based; then
+        update-rc.d -f $1 defaults
+    else
+        chkconfig --add $1
+        chkconfig --level 35 $1 on
+    fi
+}

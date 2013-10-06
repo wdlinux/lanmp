@@ -34,7 +34,7 @@ function nginx_ins {
     file_cp dz7_nginx.conf $IN_DIR/nginx/conf/rewrite/dz7_nginx.conf
     file_cp dzx15_nginx.conf $IN_DIR/nginx/conf/rewrite/dzx15_nginx.conf
     mkdir -p $IN_DIR/nginx/conf/vhost
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         file_cp init.nginxd-ubuntu $IN_DIR/init.d/nginxd
     else
         file_cp init.nginxd $IN_DIR/init.d/nginxd
@@ -45,12 +45,7 @@ function nginx_ins {
     #ln -sf $IN_DIR/php/sbin/php-fpm /etc/rc.d/init.d/php-fpm
     file_rm /etc/init.d/nginxd
     ln -sf $IN_DIR/init.d/nginxd /etc/init.d/nginxd
-    if [ $OS_RL == 2 ]; then
-        update-rc.d -f nginxd defaults >>$IN_LOG 2>&1
-    else
-        chkconfig --add nginxd >>$IN_LOG 2>&1
-        chkconfig --level 35 nginxd on >>$IN_LOG 2>&1
-    fi
+    enable_service nginxd >>$IN_LOG 2>&1
     if [ $IN_DIR_ME == 1 ]; then
         sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/init.d/nginxd
         sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/init.d/php-fpm

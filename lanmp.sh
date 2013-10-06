@@ -129,7 +129,7 @@ if [ $SERVER == "apache" ]; then
 elif [ $SERVER == "nginx" ]; then
     wget_down $NGINX_DU $PHP_FPM $PCRE_DU
 fi
-if [ $X86 == "1" ]; then
+if [[ $os_ARCH = x86_64 ]]; then
     wget_down $ZENDX86_DU
 else
     wget_down $ZEND_DU
