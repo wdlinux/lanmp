@@ -23,8 +23,11 @@ fi
 
 if type -p screen >/dev/null && screen -ls |grep -q "[0-9].$SCREEN_NAME"; then
     echo "Seems another lanmp install session is taken place."
-    echo "Rejoin this session plz type: 'screen -r $SCREEN_NAME'."
-    exit 1
+    echo "Rejoin this session now"
+    if screen -ls | grep -q Attached; then
+        screen -d $SCREEN_NAME
+    fi
+    screen -r $SCREEN_NAME
 fi
 
 if grep -qi 'debian\|ubuntu' /etc/issue; then
