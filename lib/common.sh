@@ -108,8 +108,15 @@ function GetOSVersion() {
     elif [[ -f /etc/debian_version ]] && [[ $(cat /proc/version) =~ "Debian" ]]; then
         os_VENDOR="Debian"
         os_PACKAGE="deb"
-        os_CODENAME=$(awk '/VERSION=/' /etc/os-release | sed 's/VERSION=//' | sed -r 's/\"|\(|\)//g' | awk '{print $2}')
-        os_RELEASE=$(awk '/VERSION_ID=/' /etc/os-release | sed 's/VERSION_ID=//' | sed 's/\"//g')
+        os_RELEASE=$(cat /etc/debian_version)
+        if [[ $os_RELEASE =~ 6.* ]]; then
+            os_CODENAME="squeeze"
+        elif [[ $os_RELEASE =~ 7.* ]]; then
+            os_CODENAME="wheezy"
+        else
+            os_RELEASE=$(awk '/VERSION_ID=/' /etc/os-release | sed 's/VERSION_ID=//' | sed 's/\"//g')
+            os_CODENAME=$(awk '/VERSION=/' /etc/os-release | sed 's/VERSION=//' | sed -r 's/\"|\(|\)//g' | awk '{print $2}')
+        fi
     fi
     export os_VENDOR os_RELEASE os_UPDATE os_PACKAGE os_CODENAME
 }
