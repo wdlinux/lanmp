@@ -70,12 +70,14 @@ if [[ $? == 2 ]]; then
     exit
 fi
 
-if [ $OS_RL == 1 ]; then
+# Get os version info
+GetOSVersion
+if is_rhel_based; then
     sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
 fi
 
 ###
-if [ $OS_RL == 2 ]; then
+if is_debian_based; then
     service apache2 stop 2>/dev/null
     service mysql stop 2>/dev/null
     service pure-ftpd stop 2>/dev/null
@@ -91,16 +93,16 @@ if [ $OS_RL == 2 ]; then
         libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
         libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate \
         diffutils exim4 iptables unzip sudo
-    if [ $X86 == 1 ]; then
+    if [[ $os_ARCH = x86_64 ]]; then
         ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
         ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
     else
         ln -sf /usr/lib/i386-linux-gnu/libpng* /usr/lib/
         ln -sf /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
     fi
-else
+elif is_rhel_based; then
     rpm --import lanmp/RPM-GPG-KEY.dag.txt
-    if [ $R6 == 1 ]; then
+    if [[ $os_DISTRO = rhel6 ]]; then
         el="el6"
         syslog=rsyslog
         mta=postfix
@@ -119,6 +121,8 @@ else
         ln -sf /usr/lib64/libpng.so /usr/lib/
     fi
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+else
+    err_exit "os not supported yet."
 fi
 
 ntpdate tiger.sina.com.cn
@@ -127,7 +131,7 @@ hwclock -w
 if [ ! -d $IN_DIR ]; then
     mkdir -p $IN_DIR/{etc,init.d,wdcp_bk/conf}
     mkdir -p /www/web
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         /etc/init.d/apparmor stop >/dev/null 2>&1
         update-rc.d -f apparmor remove >/dev/null 2>&1
         apt-get remove -y apparmor apparmor-utils >/dev/null 2>&1

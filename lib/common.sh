@@ -75,6 +75,11 @@ function wdcp_in_finsh {
 # os_CODENAME - vendor's codename for release
 # os_DISTRO - os distro name
 # os_ARCH - arch type
+# e.g. :
+# os_VENDOR os_RELEASE os_UPDATE os_PACKAGE os_CODENAME os_DISTRO os_ARCH
+#  CentOS        6          3       rpm        Final      rhel6     i686
+#  Debian        6.0.5              deb       squeeze     squeeze   x86_64
+#  Ubuntu        12.04              deb       precise     precise   i686
 function GetOSVersion() {
     # Figure out which vendor we are
     if [[ -x $(which lsb_release 2>/dev/null) ]]; then
@@ -134,5 +139,23 @@ function GetOSVersion() {
     # get os arch type
     os_ARCH=$(uname -m)
     export os_VENDOR os_RELEASE os_UPDATE os_PACKAGE os_CODENAME os_DISTRO os_ARCH
+}
+
+function is_rhel_based() {
+    [[ -z $os_VENDOR ]] && GetOSVersion
+    if [[ "$os_VENDOR" =~ (Red Hat) || "$os_VENDOR" =~ (CentOS) ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function is_debian_based() {
+    [[ -z $os_VENDOR ]] && GetOSVersion
+    if [[ "$os_VENDOR" =~ (Ubuntu) || "$os_VENDOR" =~ (Debian) ]]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
