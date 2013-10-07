@@ -15,7 +15,7 @@ function wdphp_ins {
         --with-mysql=/www/wdlinux/mysql \
         --with-curl --with-zlib --enable-ftp --with-gd \
         --enable-gd-native-ttf --enable-mbstring \
-        --enable-zip --without-iconv >>$IN_LOG 2>&1
+        --enable-zip --without-iconv --with-mcrypt >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdphp configure err"
     make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdphp make err"
