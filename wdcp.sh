@@ -42,7 +42,7 @@ if [ ! -d $IN_DIR ]; then
         useradd -g 27 -u 27 -d /dev/null -s /sbin/nologin mysql >/dev/null 2>&1
     fi
     groupadd -g 1000 www >/dev/null 2>&1
-    useradd -g 1000 -u 1000 -d /dev/null -s /sbin/nologin www > /dev/null 2>&1
+    useradd -g 1000 -u 1000 -d /dev/null -s /sbin/nologin www >/dev/null 2>&1
 ###
 fi
 
@@ -55,8 +55,8 @@ if [ ! -d /www/wdlinux/wdapache ]; then
         setenforce 0
         sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
     fi
-    groupadd -g 999 wdcpg
-    useradd -g 999 -u 999 -d /www/wdlinux/wdcp -s /sbin/nologin wdcpu
+    groupadd -g 999 wdcpg >/dev/null 2>&1
+    useradd -g 999 -u 999 -d /www/wdlinux/wdcp -s /sbin/nologin wdcpu >/dev/null 2>&1
 fi
 
 mysql_ins
