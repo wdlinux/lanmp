@@ -35,7 +35,7 @@ function wdapache_ins {
     chmod 755 /www/wdlinux/init.d/wdapache
     ln -sf /www/wdlinux/init.d/wdapache /etc/init.d/wdapache
     enable_service wdapache >>$IN_LOG 2>&1
-    service wdapache start
+    service wdapache start >>$IN_LOG 2>&1
     /sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
     if is_debian_based; then
         iptables-save > /etc/sysconfig/iptables
