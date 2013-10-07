@@ -12,6 +12,7 @@
 . lib/mysql.sh
 . lib/apache.sh
 . lib/nginx.sh
+. lib/tengine.sh
 . lib/php.sh
 . lib/na.sh
 . lib/libiconv.sh
@@ -28,10 +29,10 @@
 ###
 echo "Select Install
     1 apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
-    2 nginx + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
-    3 nginx + apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
+    2 nginx/tengine + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
+    3 nginx/tengine + apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
     4 install all service
-    5 don't install is now
+    5 don't install now
 "
 sleep 0.1
 read -p "Please Input 1,2,3,4,5: " SERVER_ID
@@ -46,6 +47,21 @@ elif [[ $SERVER_ID == 4 ]]; then
 else
     exit
 fi
+
+if [ $SERVER != "apache" ]; then
+    echo "Select nginx or tengine:
+        1 nginx (default)
+        2 tengine
+    "
+    sleep 0.1
+    read -p "Please Input 1,2: " WEBSERV_ID
+    if [[ $WEBSERV_ID == 2 ]]; then
+        WEBSERV="tengine"
+    else
+        WEBSERV="nginx"
+    fi
+fi
+
 echo "Select php version:
     1 php-5.2.17 (default)
     2 php-5.3.27
@@ -57,7 +73,7 @@ if [[ $PHP_VER_ID == 2 ]]; then
 else
     PHP_VER="5.2.17"
 fi
- 
+
 # make sure network connection usable.
 ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
 if [[ $? == 2 ]]; then
@@ -128,7 +144,12 @@ cd $IN_SRC
 if [ $SERVER == "apache" ]; then
     wget_down $HTTPD_DU
 elif [ $SERVER == "nginx" ]; then
-    wget_down $NGINX_DU $PHP_FPM $PCRE_DU
+    wget_down $PHP_FPM $PCRE_DU
+    if [ $WEBSERV == "tengine" ]; then
+        wget_down $TENGINE_DU
+    else
+        wget_down $NGINX_DU
+    fi
 fi
 if [[ $os_ARCH = x86_64 ]]; then
     wget_down $ZENDX86_DU
@@ -162,7 +183,11 @@ mysql_ins
 if [ $SERVER == "all" ]; then
     in_all
 else
-    ${SERVER}_ins
+    if [ $SERVER = "nginx" ]; then
+        ${WEBSERV}_ins
+    else
+        ${SERVER}_ins
+    fi
     php_ins 
     eaccelerator_ins
     zend_ins
