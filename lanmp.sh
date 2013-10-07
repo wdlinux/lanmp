@@ -4,7 +4,7 @@
 # Created by wdlinux QQ:12571192
 # Url:http://www.wdlinux.cn
 # Since 2010.04.08
-# 
+#
 
 . lib/common.conf
 . lib/common.sh
@@ -70,12 +70,11 @@ if [[ $? == 2 ]]; then
     exit
 fi
 
-if [ $OS_RL == 1 ]; then
-    sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
-fi
+# Get os version info
+GetOSVersion
 
 ###
-if [ $OS_RL == 2 ]; then
+if is_debian_based; then
     service apache2 stop 2>/dev/null
     service mysql stop 2>/dev/null
     service pure-ftpd stop 2>/dev/null
@@ -86,32 +85,10 @@ if [ $OS_RL == 2 ]; then
         pure-ftpd-mysql 2>/dev/null
     apt-get -y autoremove
     [ -f /etc/mysql/my.cnf ] && mv /etc/mysql/my.cnf /etc/mysql/my.cnf.lanmpsave
-    apt-get install -y gcc g++ make autoconf libltdl-dev libgd2-xpm-dev \
-        libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
-        libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
-        libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate \
-        diffutils exim4 iptables unzip sudo
-    if [ $X86 == 1 ]; then
-        ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
-        ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
-    else
-        ln -sf /usr/lib/i386-linux-gnu/libpng* /usr/lib/
-        ln -sf /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
-    fi
 else
-    rpm --import lanmp/RPM-GPG-KEY.dag.txt
-    [ $R6 == 1 ] && el="el6" || el="el5"
-    rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm
-    yum install -y gcc gcc-c++ make sudo autoconf libtool-ltdl-devel gd-devel \
-        freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel \
-        curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel bzip2 \
-        libcap-devel ntp sysklogd diffutils sendmail iptables unzip
-    if [ $X86 == 1 ]; then
-        ln -sf /usr/lib64/libjpeg.so /usr/lib/
-        ln -sf /usr/lib64/libpng.so /usr/lib/
-    fi
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 fi
+install_basic_packages
 
 ntpdate tiger.sina.com.cn
 hwclock -w
@@ -119,7 +96,7 @@ hwclock -w
 if [ ! -d $IN_DIR ]; then
     mkdir -p $IN_DIR/{etc,init.d,wdcp_bk/conf}
     mkdir -p /www/web
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         /etc/init.d/apparmor stop >/dev/null 2>&1
         update-rc.d -f apparmor remove >/dev/null 2>&1
         apt-get remove -y apparmor apparmor-utils >/dev/null 2>&1
@@ -152,12 +129,12 @@ if [ $SERVER == "apache" ]; then
 elif [ $SERVER == "nginx" ]; then
     wget_down $NGINX_DU $PHP_FPM $PCRE_DU
 fi
-if [ $X86 == "1" ]; then
+if [[ $os_ARCH = x86_64 ]]; then
     wget_down $ZENDX86_DU
 else
     wget_down $ZEND_DU
 fi
-wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $VSFTPD_DU $PHPMYADMIN_DU
+wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $PUREFTP_DU $PHPMYADMIN_DU
 
 function in_all {
     na_ins

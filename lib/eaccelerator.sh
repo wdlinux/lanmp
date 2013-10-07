@@ -2,8 +2,8 @@
 function eaccelerator_ins {
     local IN_LOG=$LOGPATH/${logpre}_eaccelerator_install.log
     [ -f $eac_inf ] && return
-    [[ $R6 == 1 ]] && return
-    [ $OS_RL = 2 ] && return
+    [[ $os_DISTRO = rhel6 ]] && return
+    is_debian_based && return
     echo
     echo "installing eaccelerator..."
     cd $IN_SRC

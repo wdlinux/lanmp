@@ -7,7 +7,7 @@ function mysql_ins {
     cd $IN_SRC
     rm -fr mysql-$MYS_VER/
     tar xf mysql-$MYS_VER.tar.gz >$IN_LOG 2>&1
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         if [ -f /usr/lib/x86_64-linux-gnu/libncurses.so ]; then
             #LIBNCU="/usr/lib/x86_64-linux-gnu/libncurses.so"
             LIBNCU=""
@@ -52,12 +52,7 @@ function mysql_ins {
     chown -R mysql.mysql $IN_DIR/mysql/var
     chmod 755 $IN_DIR/init.d/mysqld
     ln -sf $IN_DIR/init.d/mysqld /etc/init.d/mysqld
-    if [ $OS_RL == 2 ]; then
-        update-rc.d -f mysqld defaults >>$IN_LOG 2>&1
-    else
-        chkconfig --add mysqld >>$IN_LOG 2>&1
-        chkconfig --level 35 mysqld on >>$IN_LOG 2>&1
-    fi
+    enable_service mysqld >>$IN_LOG 2>&1
     ln -sf $IN_DIR/mysql/bin/mysql /bin/mysql
     mkdir -p /var/lib/mysql
     service mysqld start

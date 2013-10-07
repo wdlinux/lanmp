@@ -25,7 +25,7 @@ function wdphp_ins {
     sed -i 's/upload_max_filesize = 2/upload_max_filesize = 20/g' /www/wdlinux/wdphp/lib/php.ini
     sed -i 's/post_max_size = 8/post_max_size = 20/g' /www/wdlinux/wdphp/lib/php.ini
     sed -i 's/display_errors = On/display_errors = Off/g' /www/wdlinux/wdphp/lib/php.ini
-    if [ $X86 == 1 ]; then
+    if [[ $os_ARCH = x86_64 ]]; then
         mkdir -p /www/wdlinux/wdphp/lib/php/extensions/no-debug-non-zts-20060613
         file_cp php_wdcpm64.so \
             /www/wdlinux/wdphp/lib/php/extensions/no-debug-non-zts-20060613/php_wdcpm.so

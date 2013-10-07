@@ -27,22 +27,17 @@ function wdapache_ins {
     [ $? != 0 ] && err_exit "wdapache make install err"
     file_cp httpd.conf.wdapache /www/wdlinux/wdapache/conf/httpd.conf
     [ -d /www/wdlinux/init.d ] || mkdir -p /www/wdlinux/init.d
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         file_cp init.wdapache-ubuntu /www/wdlinux/init.d/wdapache
     else
         file_cp init.wdapache /www/wdlinux/init.d/wdapache
     fi
     chmod 755 /www/wdlinux/init.d/wdapache
     ln -s /www/wdlinux/init.d/wdapache /etc/init.d/wdapache
-    if [ $OS_RL == 2 ]; then
-        update-rc.d -f wdapache defaults >>$IN_LOG 2>&1
-    else
-        chkconfig --add wdapache
-        chkconfig --level 35 wdapache on
-    fi
+    enable_service wdapache >>$IN_LOG 2>&1
     service wdapache start
     /sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         iptables-save > /etc/sysconfig/iptables
     else
         service iptables save

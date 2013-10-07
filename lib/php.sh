@@ -9,8 +9,8 @@ function php_ins {
     cd $IN_SRC
     rm -fr php-$PHP_VER/
     tar xf php-$PHP_VER.tar.gz >$IN_LOG 2>&1
-    if [ $OS_RL == 2 ]; then
-        if [ $X86 == 1 ]; then
+    if is_debian_based; then
+        if [[ $os_ARCH = x86_64 ]]; then
             ln -sf /usr/lib/x86_64-linux-gnu/libssl.* /usr/lib/
         else
             ln -sf /usr/lib/i386-linux-gnu/libssl.* /usr/lib/
@@ -70,7 +70,6 @@ function php_ins {
     else
         cp php.ini-production $IN_DIR/$PHP_DIR/etc/php.ini
     fi
-    chown wdcpu.wdcpg $IN_DIR/$PHP_DIR/etc/php.ini
     ln -sf $IN_DIR/$PHP_DIRS/etc/php.ini $IN_DIR/etc/php.ini
     mkdir -p $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613
     ln -s $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613 \
@@ -103,7 +102,7 @@ function php_ins {
 
 ' $IN_DIR/init.d/php-fpm
         fi
-        if [ $OS_RL == 2 ]; then
+        if is_debian_based; then
             file_cp nginxd.fpm-ubuntu /www/wdlinux/init.d/nginxd
         else
             file_cp nginxd.fpm /www/wdlinux/init.d/nginxd
