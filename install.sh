@@ -28,6 +28,7 @@ if type -p screen >/dev/null && screen -ls |grep -q "[0-9].$SCREEN_NAME"; then
         screen -d $SCREEN_NAME
     fi
     screen -r $SCREEN_NAME
+    exit
 fi
 
 if grep -qi 'debian\|ubuntu' /etc/issue; then
