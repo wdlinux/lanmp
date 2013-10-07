@@ -33,7 +33,7 @@ function wdapache_ins {
         file_cp init.wdapache /www/wdlinux/init.d/wdapache
     fi
     chmod 755 /www/wdlinux/init.d/wdapache
-    ln -s /www/wdlinux/init.d/wdapache /etc/init.d/wdapache
+    ln -sf /www/wdlinux/init.d/wdapache /etc/init.d/wdapache
     enable_service wdapache >>$IN_LOG 2>&1
     service wdapache start
     /sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT

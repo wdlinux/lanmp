@@ -72,7 +72,7 @@ function php_ins {
     fi
     ln -sf $IN_DIR/$PHP_DIRS/etc/php.ini $IN_DIR/etc/php.ini
     mkdir -p $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613
-    ln -s $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613 \
+    ln -sf $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613 \
         $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-non-zts-20060613
     
     if [ $SERVER == "nginx" ]; then
