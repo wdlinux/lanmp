@@ -8,6 +8,7 @@
 
 . lib/common.conf
 . lib/common.sh
+. lib/basic_packages.sh
 . lib/mysql.sh
 . lib/apache.sh
 . lib/nginx.sh

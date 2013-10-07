@@ -8,6 +8,7 @@
 
 . lib/common.conf
 . lib/common.sh
+. lib/basic_packages.sh
 . lib/mysql.sh
 . lib/wdapache.sh
 . lib/wdphp.sh
