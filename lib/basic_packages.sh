@@ -25,7 +25,8 @@ function install_basic_packages() {
             syslog=sysklogd
             mta=sendmail
         fi
-        rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm
+        [ -f /etc/yum.repos.d/rpmforge.repo ] ||
+            rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm --force
         yum install -y gcc gcc-c++ make sudo autoconf libtool-ltdl-devel gd-devel \
             freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel \
             curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel bzip2 \
