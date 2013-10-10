@@ -101,7 +101,7 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 * 4 是安装所有,即可在后台里自由切换nginx,apache,nginx+apache的应用环境
 
 使用这里(github)提供的最新版本安装脚本
-------------------------------
+--------------------------------------
 
 首先下载原版本lanmp安装包
 
@@ -109,39 +109,30 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
     tar xf lanmp_laster.tar.gz
     
-clone最新版本的脚本
+确保解压之后当前目录中包含lanmp软件包目录
 
-RedHat/CentOS:
+    ls lanmp
 
-    yum install git
+执行以下命令获取最新版本的脚本和软件包
 
-Ubuntu/Debian:
+    curl https://raw.github.com/wdlinux/lanmp/dev/utils/bootstrap|sh
 
-    apt-get install git
+或者
+ 
+    wget -O - https://raw.github.com/wdlinux/lanmp/dev/utils/bootstrap|sh
 
-    git clone https://github.com/wdlinux/lanmp.git lanmp_git
+上面的命令会安装git并clone最新的代码，以及下载新版本的软件包，
 
-    cd lanmp_git
-
-您还可以切换到最新的开发分支对新功能进行测试
-
-    git checkout -b dev -t origin/dev
-
-使用新版本脚本覆盖掉lanmp的脚本
-
-    /bin/cp -rfp * ../lanmp/
-
-下载新版本软件包
-
-    cd ../lanmp/
-
-    ./utils/downloadpkg.sh
-
-开始安装
-
-    chmod u+x install.sh
+确保软件包下载OK之后开始安装
 
     ./install.sh
+
+一起参与改进一键包
+------------------
+
+我们欢迎各位同学贡献代码，我们的开发分支使用dev分支，master分支为稳定版本，
+
+请各位提交Pull Request的同学将PR提交至dev分支。
 
 卸载(注意备份数据,否则后果自负)
 -------------------------------
