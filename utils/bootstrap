@@ -27,17 +27,5 @@ chmod u+x ./utils/downloadpkg.sh
 chmod u+x install.sh
 ./utils/downloadpkg.sh
 echo "if all packages downloaded,you can begin install now:"
-read -p "install lanmp now ? (y/n)" INS
-if [ x"$INS" = 'x' ]; then
-    /bin/rm -fr $tmpdir
-    exit
-fi
-case $INS in
-    y|Y|yes|YES)
-        ./install.sh
-        ;;
-    *)
-        /bin/rm -fr $tmpdir
-        exit
-        ;;
-esac
+echo "type:    ./install.sh    to begin install."
+/bin/rm -fr $tmpdir
