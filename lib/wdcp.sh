@@ -9,6 +9,7 @@ function wdcp_ins {
     file_cp dzx15_apache.conf /www/wdlinux/wdcp/data/rewrite/dzx15_apache.conf
     file_cp dz7_nginx.conf /www/wdlinux/wdcp/data/rewrite/dz7_nginx.conf
     file_cp dzx15_nginx.conf /www/wdlinux/wdcp/data/rewrite/dzx15_nginx.conf
+    chown wdcpu.wdcpg $IN_DIR/*php*/etc/php.ini
     ####
     sqlrootpwd="wdlinux.cn"
     mysql="/www/wdlinux/mysql/bin/mysql"

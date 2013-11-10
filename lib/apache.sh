@@ -43,21 +43,16 @@ ServerName localhost
     file_cpv defaulta.conf $IN_DIR/apache/conf/vhost/00000.default.conf
     file_cp dz7_apache.conf $IN_DIR/apache/conf/rewrite/dz7_apache.conf
     file_cp dzx15_apache.conf $IN_DIR/apache/conf/rewrite/dzx15_apache.conf
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         file_cp init.httpd-ubuntu $IN_DIR/init.d/httpd
     else
         file_cp init.httpd $IN_DIR/init.d/httpd
     fi
     chmod 755 $IN_DIR/init.d/httpd
     ln -sf $IN_DIR/init.d/httpd /etc/init.d/httpd
-    if [ $OS_RL == 2 ]; then
-        update-rc.d -f httpd defaults >>$IN_LOG 2>&1
-    else
-        chkconfig --add httpd >>$IN_LOG 2>&1
-        chkconfig --level 35 httpd on >>$IN_LOG 2>&1
-    fi
+    enable_service httpd >>$IN_LOG 2>&1
     mkdir -p $IN_DIR/apache/conf/vhost
-    [ $IN_DIR_ME == 1 ] && sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/init.d/httpd
+    [ $IN_DIR_ME == 1 ] && sed -i "s#/www/wdlinux#$IN_DIR#g" $IN_DIR/init.d/httpd
     touch $httpd_inf
 }
 

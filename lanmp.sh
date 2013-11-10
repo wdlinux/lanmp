@@ -4,13 +4,15 @@
 # Created by wdlinux QQ:12571192
 # Url:http://www.wdlinux.cn
 # Since 2010.04.08
-# 
+#
 
 . lib/common.conf
 . lib/common.sh
+. lib/basic_packages.sh
 . lib/mysql.sh
 . lib/apache.sh
 . lib/nginx.sh
+. lib/tengine.sh
 . lib/php.sh
 . lib/na.sh
 . lib/libiconv.sh
@@ -27,10 +29,10 @@
 ###
 echo "Select Install
     1 apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
-    2 nginx + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
-    3 nginx + apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
+    2 nginx/tengine + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
+    3 nginx/tengine + apache + php + mysql + zend + eAccelerator + pureftpd + phpmyadmin
     4 install all service
-    5 don't install is now
+    5 don't install now
 "
 sleep 0.1
 read -p "Please Input 1,2,3,4,5: " SERVER_ID
@@ -45,6 +47,21 @@ elif [[ $SERVER_ID == 4 ]]; then
 else
     exit
 fi
+
+if [ $SERVER != "apache" ]; then
+    echo "Select nginx or tengine:
+        1 nginx (default)
+        2 tengine
+    "
+    sleep 0.1
+    read -p "Please Input 1,2: " WEBSERV_ID
+    if [[ $WEBSERV_ID == 2 ]]; then
+        WEBSERV="tengine"
+    else
+        WEBSERV="nginx"
+    fi
+fi
+
 echo "Select php version:
     1 php-5.2.17 (default)
     2 php-5.3.27
@@ -56,7 +73,7 @@ if [[ $PHP_VER_ID == 2 ]]; then
 else
     PHP_VER="5.2.17"
 fi
- 
+
 # make sure network connection usable.
 ping -c 1 -t 1 www.wdlinux.cn >/dev/null 2>&1
 if [[ $? == 2 ]]; then
@@ -70,12 +87,11 @@ if [[ $? == 2 ]]; then
     exit
 fi
 
-if [ $OS_RL == 1 ]; then
-    sed -i 's/^exclude=/#exclude=/g' /etc/yum.conf
-fi
+# Get os version info
+GetOSVersion
 
 ###
-if [ $OS_RL == 2 ]; then
+if is_debian_based; then
     service apache2 stop 2>/dev/null
     service mysql stop 2>/dev/null
     service pure-ftpd stop 2>/dev/null
@@ -86,32 +102,10 @@ if [ $OS_RL == 2 ]; then
         pure-ftpd-mysql 2>/dev/null
     apt-get -y autoremove
     [ -f /etc/mysql/my.cnf ] && mv /etc/mysql/my.cnf /etc/mysql/my.cnf.lanmpsave
-    apt-get install -y gcc g++ make autoconf libltdl-dev libgd2-xpm-dev \
-        libfreetype6 libfreetype6-dev libxml2-dev libjpeg-dev libpng12-dev \
-        libcurl4-openssl-dev libssl-dev patch libmcrypt-dev libmhash-dev \
-        libncurses5-dev  libreadline-dev bzip2 libcap-dev ntpdate \
-        diffutils exim4 iptables unzip sudo
-    if [ $X86 == 1 ]; then
-        ln -sf /usr/lib/x86_64-linux-gnu/libpng* /usr/lib/
-        ln -sf /usr/lib/x86_64-linux-gnu/libjpeg* /usr/lib/
-    else
-        ln -sf /usr/lib/i386-linux-gnu/libpng* /usr/lib/
-        ln -sf /usr/lib/i386-linux-gnu/libjpeg* /usr/lib/
-    fi
 else
-    rpm --import lanmp/RPM-GPG-KEY.dag.txt
-    [ $R6 == 1 ] && el="el6" || el="el5"
-    rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm
-    yum install -y gcc gcc-c++ make sudo autoconf libtool-ltdl-devel gd-devel \
-        freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel \
-        curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel bzip2 \
-        libcap-devel ntp sysklogd diffutils sendmail iptables unzip
-    if [ $X86 == 1 ]; then
-        ln -sf /usr/lib64/libjpeg.so /usr/lib/
-        ln -sf /usr/lib64/libpng.so /usr/lib/
-    fi
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 fi
+install_basic_packages
 
 ntpdate tiger.sina.com.cn
 hwclock -w
@@ -119,7 +113,7 @@ hwclock -w
 if [ ! -d $IN_DIR ]; then
     mkdir -p $IN_DIR/{etc,init.d,wdcp_bk/conf}
     mkdir -p /www/web
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         /etc/init.d/apparmor stop >/dev/null 2>&1
         update-rc.d -f apparmor remove >/dev/null 2>&1
         apt-get remove -y apparmor apparmor-utils >/dev/null 2>&1
@@ -150,14 +144,19 @@ cd $IN_SRC
 if [ $SERVER == "apache" ]; then
     wget_down $HTTPD_DU
 elif [ $SERVER == "nginx" ]; then
-    wget_down $NGINX_DU $PHP_FPM $PCRE_DU
+    wget_down $PHP_FPM $PCRE_DU
+    if [ $WEBSERV == "tengine" ]; then
+        wget_down $TENGINE_DU
+    else
+        wget_down $NGINX_DU
+    fi
 fi
-if [ $X86 == "1" ]; then
+if [[ $os_ARCH = x86_64 ]]; then
     wget_down $ZENDX86_DU
 else
     wget_down $ZEND_DU
 fi
-wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $VSFTPD_DU $PHPMYADMIN_DU
+wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $PUREFTP_DU $PHPMYADMIN_DU
 
 function in_all {
     na_ins
@@ -184,7 +183,11 @@ mysql_ins
 if [ $SERVER == "all" ]; then
     in_all
 else
-    ${SERVER}_ins
+    if [ $SERVER = "nginx" ]; then
+        ${WEBSERV}_ins
+    else
+        ${SERVER}_ins
+    fi
     php_ins 
     eaccelerator_ins
     zend_ins

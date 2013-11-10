@@ -1,25 +1,25 @@
-# nginx install function
-function nginx_ins {
-    local IN_LOG=$LOGPATH/${logpre}_nginx_install.log
-    [ -f $nginx_inf ] && return
+# Tengine install function
+function tengine_ins {
+    local IN_LOG=$LOGPATH/${logpre}_tengine_install.log
+    [ -f $tengine_inf ] && return
     pcre_ins
     echo
-    echo "installing nginx..."
+    echo "installing tengine..."
     cd $IN_SRC
-    rm -fr nginx-$NGI_VER
-    tar xvf nginx-$NGI_VER.tar.gz >$IN_LOG 2>&1
-    cd nginx-$NGI_VER
+    rm -fr tengine-$TENG_VER
+    tar xf tengine-$TENG_VER.tar.gz >$IN_LOG 2>&1
+    cd tengine-$TENG_VER
     make_clean
     ./configure --user=www --group=www \
-        --prefix=$IN_DIR/nginx-$NGI_VER \
+        --prefix=$IN_DIR/tengine-$TENG_VER \
         --with-http_stub_status_module \
         --with-http_ssl_module >>$IN_LOG 2>&1
-    [ $? != 0 ] && err_exit "nginx configure err"
+    [ $? != 0 ] && err_exit "tengine configure err"
     make >>$IN_LOG 2>&1
-    [ $? != 0 ] && err_exit "nginx make err"
+    [ $? != 0 ] && err_exit "tengine make err"
     make install >>$IN_LOG 2>&1
-    [ $? != 0 ] && err_exit "nginx make install err"
-    ln -sf $IN_DIR/nginx-$NGI_VER $IN_DIR/nginx
+    [ $? != 0 ] && err_exit "tengine make install err"
+    ln -sf $IN_DIR/tengine-$TENG_VER $IN_DIR/nginx
     mkdir -p $IN_DIR/nginx/conf/{vhost,rewrite}
     mkdir -p /www/{web/default,web_logs}
     file_cp phpinfo.php /www/web/default/phpinfo.php

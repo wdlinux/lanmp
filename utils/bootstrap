@@ -1,0 +1,31 @@
+#!/bin/sh
+if [ -d ./lanmp ]; then
+    TOP=`pwd`
+else
+    echo "please download lanmp.tar.gz first:"
+    echo "wget http://dl.wdlinux.cn:5180/lanmp_laster.tar.gz"
+    echo "tar xf lanmp_laster.tar.gz"
+    exit
+fi
+
+if type -p git >/dev/null; then
+    echo "git already installed."
+else
+    if grep -qi 'debian\|ubuntu' /etc/issue; then
+        apt-get -y install git
+    else
+        yum -y install git
+    fi
+fi
+tmpdir=`mktemp -d`
+cd $tmpdir
+git clone https://github.com/wdlinux/lanmp.git .
+git checkout -b dev -t origin/dev
+/bin/cp -rfp ./* $TOP
+cd $TOP
+chmod u+x ./utils/downloadpkg.sh
+chmod u+x install.sh
+./utils/downloadpkg.sh
+echo "if all packages downloaded,you can begin install now:"
+echo "type:    ./install.sh    to begin install."
+/bin/rm -fr $tmpdir

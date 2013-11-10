@@ -17,7 +17,7 @@ function start_srv {
     /sbin/iptables -I INPUT -p tcp -m tcp --dport 20000:20500 -m state --state NEW -j ACCEPT
     /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
     /sbin/iptables -I INPUT -p tcp --dport 21 -j ACCEPT
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         mkdir -p /etc/sysconfig
         iptables-save > /etc/sysconfig/iptables
     else

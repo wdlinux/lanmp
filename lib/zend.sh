@@ -5,7 +5,7 @@ function zend_ins {
     [ -f $zend_inf ] && return
     echo "Zend installing..."
     cd $IN_SRC
-    if [ $X86 == "1" ]; then
+    if [[ $os_ARCH = x86_64 ]]; then
         tar xf zend_64.tar.gz -C $IN_DIR >$IN_LOG 2>&1
     else
         tar xf zend_32.tar.gz -C $IN_DIR >$IN_LOG 2>&1

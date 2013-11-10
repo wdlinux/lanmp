@@ -15,7 +15,7 @@ function wdphp_ins {
         --with-mysql=/www/wdlinux/mysql \
         --with-curl --with-zlib --enable-ftp --with-gd \
         --enable-gd-native-ttf --enable-mbstring \
-        --enable-zip --without-iconv >>$IN_LOG 2>&1
+        --enable-zip --without-iconv --with-mcrypt >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdphp configure err"
     make >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "wdphp make err"
@@ -25,7 +25,7 @@ function wdphp_ins {
     sed -i 's/upload_max_filesize = 2/upload_max_filesize = 20/g' /www/wdlinux/wdphp/lib/php.ini
     sed -i 's/post_max_size = 8/post_max_size = 20/g' /www/wdlinux/wdphp/lib/php.ini
     sed -i 's/display_errors = On/display_errors = Off/g' /www/wdlinux/wdphp/lib/php.ini
-    if [ $X86 == 1 ]; then
+    if [[ $os_ARCH = x86_64 ]]; then
         mkdir -p /www/wdlinux/wdphp/lib/php/extensions/no-debug-non-zts-20060613
         file_cp php_wdcpm64.so \
             /www/wdlinux/wdphp/lib/php/extensions/no-debug-non-zts-20060613/php_wdcpm.so

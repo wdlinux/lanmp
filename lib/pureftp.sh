@@ -9,12 +9,8 @@ function pureftpd_ins {
     tar xf pure-ftpd-$PUR_VER.tar.gz >$IN_LOG 2>&1
     cd pure-ftpd-$PUR_VER/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$IN_DIR/mysql/lib/mysql
-    cp -pR $IN_DIR/mysql/lib/mysql/* /usr/lib/
-    if [ $X86 == 1 ]; then
-        cp /usr/lib/libmysqlclient.so.16 /usr/lib64/
-    fi
     ./configure --prefix=$IN_DIR/pureftpd-$PUR_VER \
-        --with-mysql=/www/wdlinux/mysql \
+        --with-mysql \
         --with-quotas \
         --with-cookie \
         --with-virtualhosts \
@@ -44,7 +40,7 @@ function pureftpd_ins {
     file_cp pureftpd-mysql.conf $IN_DIR/etc/pureftpd-mysql.conf
     file_cp pureftpd-mysql.conf $IN_DIR/wdcp_bk/pureftpd-mysql.conf
     file_cp pure-ftpd.conf $IN_DIR/etc/pure-ftpd.conf
-    if [ $OS_RL == 2 ]; then
+    if is_debian_based; then
         file_cp init.pureftpd-ubuntu $IN_DIR/init.d/pureftpd
     else
         file_cp init.pureftpd $IN_DIR/init.d/pureftpd
@@ -53,14 +49,9 @@ function pureftpd_ins {
     #dbpw=`grep dbpw /www/wdlinux/wdcp/data/db.inc.php | awk -F"'" '{print $2}'`
     #sed -i 's/{passwd}/$dbpw/g' $IN_DIR/etc/pureftpd-mysql.conf
     ln -sf $IN_DIR/init.d/pureftpd /etc/init.d/pureftpd
-    if [ $OS_RL == 2 ]; then
-        update-rc.d -f pureftpd defaults >>$IN_LOG 2>&1
-    else
-        chkconfig --add pureftpd >>$IN_LOG 2>&1
-        chkconfig --level 35 pureftpd on >>$IN_LOG 2>&1
-    fi
+    enable_service pureftpd >>$IN_LOG 2>&1
     touch /var/log/pureftpd.log
-    if [ $OS_RL == 2 ];then
+    if is_debian_based; then
         if [ -f /etc/rsyslog.d/50-default.conf ]; then
             sed -i 's#mail,news.none#mail,news.none;ftp.none#g' /etc/rsyslog.d/50-default.conf
             echo 'ftp.*        -/var/log/pureftpd.log' >> /etc/rsyslog.d/60-pureftpd.conf
@@ -70,7 +61,7 @@ function pureftpd_ins {
         if [ -f /etc/syslog.conf ]; then
             sed -i 's/cron.none/cron.none;ftp.none/g' /etc/syslog.conf
             echo 'ftp.*        -/var/log/pureftpd.log' >> /etc/syslog.conf
-            /etc/init.d/syslog restart
+            service syslog restart
         fi
     fi
     #service pureftpd start
