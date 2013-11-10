@@ -20,7 +20,6 @@ fi
 tmpdir=`mktemp -d`
 cd $tmpdir
 git clone https://github.com/wdlinux/lanmp.git .
-git checkout -b dev -t origin/dev
 /bin/cp -rfp ./* $TOP
 cd $TOP
 chmod u+x ./utils/downloadpkg.sh
