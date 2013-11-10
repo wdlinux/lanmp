@@ -9,12 +9,8 @@ function pureftpd_ins {
     tar xf pure-ftpd-$PUR_VER.tar.gz >$IN_LOG 2>&1
     cd pure-ftpd-$PUR_VER/
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$IN_DIR/mysql/lib/mysql
-    cp -pR $IN_DIR/mysql/lib/mysql/* /usr/lib/
-    if [[ $os_ARCH = x86_64 ]]; then
-        cp /usr/lib/libmysqlclient.so.16 /usr/lib64/
-    fi
     ./configure --prefix=$IN_DIR/pureftpd-$PUR_VER \
-        --with-mysql=/www/wdlinux/mysql \
+        --with-mysql \
         --with-quotas \
         --with-cookie \
         --with-virtualhosts \

@@ -57,7 +57,7 @@ function mysql_ins {
     mkdir -p /var/lib/mysql
     service mysqld start
     echo "PATH=\$PATH:$IN_DIR/mysql/bin" > /etc/profile.d/mysql.sh
-    echo "$IN_DIR/mysql" > /etc/ld.so.conf.d/mysql-wdl.conf
+    echo "$IN_DIR/mysql/lib/mysql" > /etc/ld.so.conf.d/mysql-wdl.conf
     ldconfig >>$IN_LOG 2>&1
     $IN_DIR/mysql/bin/mysqladmin -u root password "wdlinux.cn"
     /www/wdlinux/mysql/bin/mysql -uroot -p"wdlinux.cn" -e \
