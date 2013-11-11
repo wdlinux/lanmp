@@ -19,6 +19,9 @@ function err_exit {
     echo "----Install Error: $1 -----------"
     echo
     echo
+    if [ -n "$IN_LOG" ]; then
+        echo "check $IN_LOG for more details"
+    fi
     exit
 }
 
