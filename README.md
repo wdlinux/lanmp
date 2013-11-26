@@ -115,11 +115,11 @@ nginx在处理静态文件上有着非常好的性能和稳定性，且节省资
 
 执行以下命令获取最新版本的脚本和软件包
 
-    curl https://raw.github.com/wdlinux/lanmp/dev/utils/bootstrap|sh
+    curl https://raw.github.com/wdlinux/lanmp/master/utils/bootstrap|sh
 
 或者
  
-    wget -O - https://raw.github.com/wdlinux/lanmp/dev/utils/bootstrap|sh
+    wget -O - https://raw.github.com/wdlinux/lanmp/master/utils/bootstrap|sh
 
 上面的命令会安装git并clone最新的代码，以及下载新版本的软件包，
 
