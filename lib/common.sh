@@ -101,7 +101,7 @@ function GetOSVersion() {
         # CentOS release 5.5 (Final)
         # CentOS Linux release 6.0 (Final)
         os_CODENAME=""
-        for r in "Red Hat" "CentOS"; do
+        for r in "Red Hat" "CentOS" "wdOS"; do
             os_VENDOR=$r
             if [[ -n "`grep \"$r\" /etc/redhat-release`" ]]; then
                 ver=`sed -e 's/^.* \(.*\) (\(.*\)).*$/\1\|\2/' /etc/redhat-release`
@@ -132,7 +132,7 @@ function GetOSVersion() {
     if [[ "$os_VENDOR" =~ (Ubuntu) || "$os_VENDOR" =~ (Debian) ]]; then
         # 'Everyone' refers to Ubuntu / Debian releases by the code name adjective
         os_DISTRO=$os_CODENAME
-    elif [[ "$os_VENDOR" =~ (Red Hat) || "$os_VENDOR" =~ (CentOS) ]]; then
+    elif [[ "$os_VENDOR" =~ (Red Hat) || "$os_VENDOR" =~ (CentOS) || "$os_VENDOR" =~ (wdOS) ]]; then
         # Drop the . release as we assume it's compatible
         os_DISTRO="rhel${os_RELEASE::1}"
     else
@@ -146,7 +146,7 @@ function GetOSVersion() {
 
 function is_rhel_based() {
     [[ -z $os_VENDOR ]] && GetOSVersion
-    if [[ "$os_VENDOR" =~ (Red Hat) || "$os_VENDOR" =~ (CentOS) ]]; then
+    if [[ "$os_VENDOR" =~ (Red Hat) || "$os_VENDOR" =~ (CentOS) || "$os_VENDOR" =~ (wdOS) ]]; then
         return 0
     else
         return 1
