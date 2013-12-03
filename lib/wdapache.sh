@@ -1,8 +1,9 @@
 # wdcp apache install function
 function wdapache_ins {
     local IN_LOG=$LOGPATH/${logpre}_apache_install.log
+    local install_lock=/tmp/wdapache_install.lock
     echo
-    [ -f $wdapache_inf ] && return
+    [ -f $install_lock ] && return
     echo "installing wdcp apache..."
     cd $IN_SRC
     rm -fr httpd-$APA_VER
@@ -42,5 +43,5 @@ function wdapache_ins {
     else
         service iptables save
     fi
-    touch $wdapache_inf
+    touch $install_lock
 }

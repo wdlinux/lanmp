@@ -2,8 +2,9 @@
 function wdphp_ins {
     PHP_VER=5.2.17
     local IN_LOG=$LOGPATH/${logpre}_php_install.log
+    local install_lock=/tmp/wdphp_install.lock
     echo
-    [ -f $wdphp_inf ] && return
+    [ -f $install_lock ] && return
     echo "installing wdcp php..."
     cd $IN_SRC
     rm -fr php-$PHP_VER
@@ -37,6 +38,6 @@ extension=php_wdcpm.so' >> /www/wdlinux/wdphp/lib/php.ini
         echo 'extension_dir=/www/wdlinux/wdphp/lib/php/extensions/no-debug-zts-20060613
 extension=php_wdcpm.so' >> /www/wdlinux/wdphp/lib/php.ini
     fi
-    touch $wdphp_inf
+    touch $install_lock
 }
 

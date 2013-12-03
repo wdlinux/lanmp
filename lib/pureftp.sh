@@ -1,8 +1,9 @@
 # pureftpd install function
 function pureftpd_ins {
     local IN_LOG=$LOGPATH/${logpre}_pureftpd_install.log
+    local install_lock=/tmp/pureftpd_install.lock
     echo
-    [ -f $pureftp_inf ] && return
+    [ -f $install_lock ] && return
     echo "pureftpd installing..."
     cd $IN_SRC
     rm -fr pure-ftpd-$PUR_VER/
@@ -65,6 +66,6 @@ function pureftpd_ins {
         fi
     fi
     #service pureftpd start
-    touch $pureftp_inf
+    touch $install_lock
 }
 

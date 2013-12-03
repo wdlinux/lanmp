@@ -1,6 +1,7 @@
 # apache/nginx configure
 function conf {
-    [ -f $conf_inf ] && return
+    local install_lock=/tmp/web_conf.lock
+    [ -f $install_lock ] && return
     cd $IN_PWD/conf
     file_cp vhost.sh /bin/vhost.sh
     mkdir -p /www/web/default
@@ -47,6 +48,6 @@ function conf {
             sed -i "s#/www/wdlinux#$IN_DIR#g" $IN_DIR/nginx/conf/nginx.conf
         fi
     fi
-    touch $conf_inf
+    touch $install_lock
 }
 

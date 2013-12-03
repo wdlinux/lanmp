@@ -1,7 +1,8 @@
 # nginx install function
 function nginx_ins {
     local IN_LOG=$LOGPATH/${logpre}_nginx_install.log
-    [ -f $nginx_inf ] && return
+    local install_lock=/tmp/nginx_install.lock
+    [ -f $install_lock ] && return
     pcre_ins
     echo
     echo "installing nginx..."
@@ -46,6 +47,6 @@ function nginx_ins {
         sed -i "s#/www/wdlinux#$IN_DIR#g" /etc/init.d/php-fpm
         sed -i "s#/www/wdlinux#$IN_DIR#g" $IN_DIR/nginx/conf/nginx.conf
     fi
-    touch $nginx_inf
+    touch $install_lock
 }
 

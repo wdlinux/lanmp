@@ -1,8 +1,9 @@
 # mysql install function
 function mysql_ins {
     local IN_LOG=$LOGPATH/${logpre}_mysql_install.log
+    local install_lock=/tmp/mysql_install.lock
     echo
-    [ -f $mysql_inf ] && return
+    [ -f $install_lock ] && return
     echo "installing mysql,this may take a few minutes,hold on plz..."
     cd $IN_SRC
     rm -fr mysql-$MYS_VER/
@@ -66,6 +67,6 @@ function mysql_ins {
         DROP DATABASE test;
         drop user ''@'%';flush privileges;"
     ln -sf /tmp/mysql.sock /var/lib/mysql/
-    touch $mysql_inf
+    touch $install_lock
 }
 

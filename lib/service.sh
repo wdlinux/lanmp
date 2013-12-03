@@ -1,6 +1,7 @@
 # start services
 function start_srv {
-    [ -f $conf_inf ] && return
+    local install_lock=/tmp/service_conf.lock
+    [ -f $install_lock ] && return
     echo
     echo "restart..."
     service mysqld restart
@@ -23,5 +24,6 @@ function start_srv {
     else
         service iptables save
     fi
+    touch $install_lock
 }
 

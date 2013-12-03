@@ -1,8 +1,9 @@
 # apache install function
 function apache_ins {
     local IN_LOG=$LOGPATH/${logpre}_apache_install.log
+    local install_lock=/tmp/httpd_install.lock
     echo
-    [ -f $httpd_inf ] && return
+    [ -f $install_lock ] && return
     echo "installing httpd..."
     cd $IN_SRC
     rm -fr httpd-$APA_VER
@@ -53,6 +54,6 @@ ServerName localhost
     enable_service httpd >>$IN_LOG 2>&1
     mkdir -p $IN_DIR/apache/conf/vhost
     [ $IN_DIR_ME == 1 ] && sed -i "s#/www/wdlinux#$IN_DIR#g" $IN_DIR/init.d/httpd
-    touch $httpd_inf
+    touch $install_lock
 }
 

@@ -1,7 +1,12 @@
 # eaccelerator install function
 function eaccelerator_ins {
     local IN_LOG=$LOGPATH/${logpre}_eaccelerator_install.log
-    [ -f $eac_inf ] && return
+    if [[ -n $SERVER ]]; then
+        local install_lock=/tmp/${SERVER}-php-eaccelerator_install.lock
+    else
+        local install_lock=/tmp/php-eaccelerator_install.lock
+    fi
+    [ -f $install_lock ] && return
     [[ $os_DISTRO = rhel6 ]] && return
     is_debian_based && return
     echo
@@ -40,6 +45,6 @@ eaccelerator.shm_prune_period="3600"
 eaccelerator.shm_only="0"
 eaccelerator.compress="1"
 eaccelerator.compress_level="9"' >> $IN_DIR/etc/php.ini
-    touch $eac_inf
+    touch $install_lock
 }
 

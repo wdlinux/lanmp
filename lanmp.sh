@@ -161,12 +161,11 @@ wget_down $MYSQL_DU $PHP_DU $EACCELERATOR_DU $PUREFTP_DU $PHPMYADMIN_DU
 function in_all {
     na_ins
     SERVER="nginx"; php_ins
-    eaccelerator_ins
-    zend_ins
-    rm -f $php_inf $eac_inf $zend_inf
+    SERVER="nginx"; eaccelerator_ins
+    SERVER="nginx"; zend_ins
     SERVER="apache"; php_ins
-    eaccelerator_ins
-    zend_ins
+    SERVER="apache"; eaccelerator_ins
+    SERVER="apache"; zend_ins
 }
 
 if [ $SOFT_DOWN == 1 ]; then

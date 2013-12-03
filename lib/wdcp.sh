@@ -1,6 +1,7 @@
 # wdcp install function
 function wdcp_ins {
-    [ -f $wdcp_inf ] && return
+    local install_lock=/tmp/wdcp_install.lock
+    [ -f $install_lock ] && return
     cd $IN_SRC
     tar xf wdcp_$WDCP_VER.tar.gz -C /
     [ $? != 0 ] && err_exit "wdcp install err"
@@ -38,6 +39,6 @@ function wdcp_ins {
     /www/wdlinux/wdphp/bin/php /www/wdlinux/wdcp/task/wdcp_perm_check.php
     service wdapache restart
     service pureftpd restart
-    touch $wdcp_inf
+    touch $install_lock
 }
 

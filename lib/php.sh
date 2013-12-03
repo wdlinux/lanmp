@@ -1,8 +1,13 @@
 # php install function
 function php_ins {
     local IN_LOG=$LOGPATH/${logpre}_php_install.log
+    if [[ -n $SERVER ]]; then
+        local install_lock=/tmp/${SERVER}-php_install.lock
+    else
+        local install_lock=/tmp/php_install.lock
+    fi
     echo
-    [ -f $php_inf ] && return
+    [ -f $install_lock ] && return
     libiconv_ins
     echo
     echo "installing php..."
@@ -113,6 +118,6 @@ function php_ins {
     if [ $SERVER_ID == 4 ]; then
         sed -i 's/service/#service/g' /www/wdlinux/init.d/nginxd
     fi
-    touch $php_inf
+    touch $install_lock
 }
 

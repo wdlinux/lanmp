@@ -1,8 +1,9 @@
 # libiconv install function
 function libiconv_ins {
     local IN_LOG=$LOGPATH/${logpre}_libiconv_install.log
+    local install_lock=/tmp/libiconv_install.lock
     echo
-    [ -f $libiconv_inf ] && return
+    [ -f $install_lock ] && return
     echo "installing libiconv..."
     cd $IN_SRC
     rm -fr libiconv-$LIBICONV_VER
@@ -15,6 +16,6 @@ function libiconv_ins {
     make install >>$IN_LOG 2>&1
     [ $? != 0 ] && err_exit "libiconv make install err"
     ldconfig
-    touch $libiconv_inf
+    touch $install_lock
 }
 
