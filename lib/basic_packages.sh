@@ -19,18 +19,16 @@ function install_basic_packages() {
         if [[ $os_DISTRO = rhel6 ]]; then
             el="el6"
             syslog=rsyslog
-            mta=postfix
         else
             el="el5"
             syslog=sysklogd
-            mta=sendmail
         fi
         [ -f /etc/yum.repos.d/rpmforge.repo ] ||
             rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.$el.rf.$(uname -m).rpm --force
         yum install -y gcc gcc-c++ make sudo autoconf libtool-ltdl-devel gd-devel \
             freetype-devel libxml2-devel libjpeg-devel libpng-devel openssl-devel \
             curl-devel patch libmcrypt-devel libmhash-devel ncurses-devel bzip2 \
-            libcap-devel ntp diffutils iptables unzip $syslog $mta
+            libcap-devel ntp diffutils iptables unzip sendmail $syslog
         if [[ $os_ARCH = x86_64 ]]; then
             ln -sf /usr/lib64/libjpeg.so /usr/lib/
             ln -sf /usr/lib64/libpng.so /usr/lib/
