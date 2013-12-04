@@ -16,7 +16,8 @@ if [ "$1" == "un" -o "$1" == "uninstall" ]; then
     bf=$(date +%Y%m%d)
     tar zcf /www/backup/mysqlbk_$bf.tar.gz /www/wdlinux/mysql/var
     rm -fr /www/wdlinux
-    rm -f /tmp/*_ins.txt
+    rm -f /tmp/*install.lock
+    rm -f /etc/init.d/{httpd,nginxd,mysqld,pureftpd,wdapache}
     reboot
     exit
 fi
