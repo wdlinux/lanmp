@@ -1,8 +1,18 @@
 #! /bin/sh
 
-php_fpm_BIN=/www/wdlinux/php/bin/php-cgi
+### BEGIN INIT INFO
+# Provides:          php-fpm
+# Required-Start:    $remote_fs $network
+# Required-Stop:     $remote_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts php-fpm
+# Description:       starts the PHP FastCGI Process Manager daemon
+### END INIT INFO
+
+php_fpm_BIN=/www/wdlinux/nginx_php/bin/php-cgi
 php_fpm_CONF=/www/wdlinux/etc/php-fpm.conf
-php_fpm_PID=/www/wdlinux/php/logs/php-fpm.pid
+php_fpm_PID=/www/wdlinux/nginx_php/logs/php-fpm.pid
 
 
 php_opts="--fpm-config $php_fpm_CONF"
@@ -130,9 +140,21 @@ case "$1" in
 
 		echo " done"
 	;;
+      status)
+		if [ -r $php_fpm_PID ] ; then
+			PID=`cat $php_fpm_PID`
+			if [ -n $PID ] && kill -0 $PID 2>/dev/null ; then
+				echo "php_fpm is running (pid $PID)."
+			else
+				echo "php_fpm is dead but pid file exist."
+			fi
+		else
+			echo "php_fpm is stopped."
+		fi
+	;;
 
 	*)
-		echo "Usage: $0 {start|stop|quit|restart|reload|logrotate}"
+		echo "Usage: $0 {start|stop|status|quit|restart|reload|logrotate}"
 		exit 1
 	;;
 

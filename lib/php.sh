@@ -33,7 +33,9 @@ function php_ins {
             NV="--enable-fpm --with-fpm-user=www --with-fpm-group=www"
         fi
     fi
-    [ $SERVER == "apache" -o $SERVER == "na" ] && NV="--with-apxs2=$IN_DIR/apache/bin/apxs"
+    if [ $SERVER == "apache" -o $SERVER == "na" ]; then
+        NV="--with-apxs2=$IN_DIR/apache/bin/apxs"
+    fi
     cd php-$PHP_VER/
     make clean >/dev/null 2>&1
     if [ $SERVER == "apache" -o $SERVER == "na" ]; then
@@ -71,9 +73,9 @@ function php_ins {
     rm -rf $IN_DIR/php
     ln -sf $IN_DIR/$PHP_DIRS $IN_DIR/php
     if [ $PHP_VER == "5.2.17" ]; then
-        cp php.ini-dist $IN_DIR/$PHP_DIR/etc/php.ini
+        file_cp php.ini-php52 $IN_DIR/$PHP_DIR/etc/php.ini
     else
-        cp php.ini-production $IN_DIR/$PHP_DIR/etc/php.ini
+        file_cp php.ini-php53 $IN_DIR/$PHP_DIR/etc/php.ini
     fi
     ln -sf $IN_DIR/$PHP_DIRS/etc/php.ini $IN_DIR/etc/php.ini
     mkdir -p $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-zts-20060613
@@ -82,7 +84,7 @@ function php_ins {
     
     if [ $SERVER == "nginx" ]; then
         if [ $PHP_VER == "5.2.17" ]; then
-            ln -sf $IN_DIR/$PHP_DIR/sbin/php-fpm $IN_DIR/init.d/php-fpm
+            file_cp init.php-fpm-php52 $IN_DIR/init.d/php-fpm
             sed -i '/nobody/s#<!--##g' $IN_DIR/etc/php-fpm.conf
             sed -i '/nobody/s#-->##g' $IN_DIR/etc/php-fpm.conf
             sed -i 's/>nobody</>www</' $IN_DIR/etc/php-fpm.conf
@@ -94,19 +96,6 @@ function php_ins {
         
         chmod 755 $IN_DIR/init.d/php-fpm
         ln -sf $IN_DIR/init.d/php-fpm /etc/init.d/php-fpm
-        if [ $PHP_VER == "5.2.17" ]; then
-            sed -i '1 a \\n### BEGIN INIT INFO \
-# Provides:          php-fpm \
-# Required-Start:    $remote_fs $network \
-# Required-Stop:     $remote_fs $network \
-# Default-Start:     2 3 4 5 \
-# Default-Stop:      0 1 6 \
-# Short-Description: starts php-fpm \
-# Description:       starts the PHP FastCGI Process Manager daemon \
-### END INIT INFO
-
-' $IN_DIR/init.d/php-fpm
-        fi
         if is_debian_based; then
             file_cp nginxd.fpm-ubuntu /www/wdlinux/init.d/nginxd
         else
