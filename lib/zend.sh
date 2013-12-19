@@ -1,6 +1,9 @@
 # zend install function
 function zend_ins {
     local IN_LOG=$LOGPATH/${logpre}_zend_install.log
+    if [[ $PHP_VER != "5.2.17" ]]; then
+        return
+    fi
     if [[ -n $SERVER ]]; then
         local install_lock=/tmp/${SERVER}-php-zend_install.lock
     else
