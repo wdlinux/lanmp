@@ -1,7 +1,7 @@
 # zend install function
 function zend_ins {
     local IN_LOG=$LOGPATH/${logpre}_zend_install.log
-    if [[ $PHP_VER != "5.2.17" ]]; then
+    if [[ $PHP_VER != $PHP52_VER ]]; then
         return
     fi
     if [[ -n $SERVER ]]; then

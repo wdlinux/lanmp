@@ -64,15 +64,15 @@ if [ $SERVER != "apache" ]; then
 fi
 
 echo "Select php version:
-    1 php-5.2.17 (default)
-    2 php-5.3.28
+    1 php-5.2 (default)
+    2 php-5.3
 "
 sleep 0.1
 read -p "Please Input 1,2: " PHP_VER_ID
 if [[ $PHP_VER_ID == 2 ]]; then
-    PHP_VER="5.3.28"
+    PHP_VER=$PHP53_VER
 else
-    PHP_VER="5.2.17"
+    PHP_VER=$PHP52_VER
 fi
 
 # make sure network connection usable.

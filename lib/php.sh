@@ -20,13 +20,13 @@ function php_ins {
         else
             ln -sf /usr/lib/i386-linux-gnu/libssl.* /usr/lib/
         fi
-        if [ $PHP_VER = "5.2.17" ]; then
+        if [ $PHP_VER = $PHP52_VER ]; then
             patch -d php-$PHP_VER -p1 < debian_patches_disable_SSLv2_for_openssl_1_0_0.patch >>$IN_LOG 2>&1
         fi
     fi
     NV=""
     if [ $SERVER == "nginx" ]; then
-        if [ $PHP_VER == "5.2.17" ]; then
+        if [ $PHP_VER == $PHP52_VER ]; then
             NV="--enable-fastcgi --enable-fpm --with-fpm-conf=$IN_DIR/etc/php-fpm.conf"
             gzip -cd php-$PHP_VER-fpm-0.5.14.diff.gz | patch -fd php-$PHP_VER -p1 >>$IN_LOG 2>&1
         else
@@ -72,7 +72,7 @@ function php_ins {
     ln -sf $IN_DIR/$PHP_DIR $IN_DIR/$PHP_DIRS
     rm -rf $IN_DIR/php
     ln -sf $IN_DIR/$PHP_DIRS $IN_DIR/php
-    if [ $PHP_VER == "5.2.17" ]; then
+    if [ $PHP_VER == $PHP52_VER ]; then
         file_cp php.ini-php52 $IN_DIR/$PHP_DIR/etc/php.ini
     else
         file_cp php.ini-php53 $IN_DIR/$PHP_DIR/etc/php.ini
@@ -83,7 +83,7 @@ function php_ins {
         $IN_DIR/$PHP_DIR/lib/php/extensions/no-debug-non-zts-20060613
     
     if [ $SERVER == "nginx" ]; then
-        if [ $PHP_VER == "5.2.17" ]; then
+        if [ $PHP_VER == $PHP52_VER ]; then
             file_cp init.php-fpm-php52 $IN_DIR/init.d/php-fpm
             sed -i '/nobody/s#<!--##g' $IN_DIR/etc/php-fpm.conf
             sed -i '/nobody/s#-->##g' $IN_DIR/etc/php-fpm.conf

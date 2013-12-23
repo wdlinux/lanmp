@@ -2,18 +2,18 @@
 # Memcache install scripts
 # Author:wdlinux
 # Url http://www.wdlinux.cn
-
+version=1.4.17
 echo "Select php version:
-    1 php-5.2.17 (default)
-    2 php-5.3.27
+    1 php-5.2 (default)
+    2 php-5.3
 "
 sleep 0.1
 read -p "Please Input 1,2: " PHP_VER_ID
 if [[ $PHP_VER_ID == 2 ]]; then
-    PHP_VER="5.3.27"
+    PHP_VER="5.3"
     ext_dir="no-debug-non-zts-20090626"
 else
-    PHP_VER="5.2.17"
+    PHP_VER="5.2"
     ext_dir="no-debug-zts-20060613"
 fi
 TOP=$(cd $(dirname $0)/.. && pwd)
@@ -29,7 +29,7 @@ yum install -y zlib-devel
 ###
 cd /tmp
 wget -c https://github.com/downloads/libevent/libevent/libevent-1.4.14b-stable.tar.gz
-wget -c http://memcached.googlecode.com/files/memcached-1.4.15.tar.gz
+wget -c http://www.memcached.org/files/memcached-$version.tar.gz
 wget -c http://pecl.php.net/get/memcache-2.2.7.tgz
 tar xf libevent-1.4.14b-stable.tar.gz
 cd libevent-1.4.14b-stable
@@ -39,8 +39,8 @@ make
 make install
 cd ..
 
-tar xf memcached-1.4.15.tar.gz
-cd memcached-1.4.15
+tar xf memcached-$version.tar.gz
+cd memcached-$version
 ./configure --prefix=/www/wdlinux/memcached --with-libevent=/usr
 make
 [ $? != 0 ] && exit
