@@ -2,6 +2,7 @@
 #
 # Web Server Install Script
 # Created by wdlinux QQ:12571192
+# Maintained by itxx00@gmail.com
 # Url:http://www.wdlinux.cn
 # Since 2010.04.08
 #
@@ -64,12 +65,12 @@ fi
 
 echo "Select php version:
     1 php-5.2.17 (default)
-    2 php-5.3.27
+    2 php-5.3.28
 "
 sleep 0.1
 read -p "Please Input 1,2: " PHP_VER_ID
 if [[ $PHP_VER_ID == 2 ]]; then
-    PHP_VER="5.3.27"
+    PHP_VER="5.3.28"
 else
     PHP_VER="5.2.17"
 fi
