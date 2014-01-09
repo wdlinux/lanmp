@@ -32,13 +32,11 @@ function error {
 
 function file_cp {
     [ -f $2 ] && mv $2 ${2}$(date +%Y%m%d%H)
-    cd $IN_PWD/conf
-    [ -f $1 ] && cp -f $1 $2
+    [ -f $IN_PWD/conf/$1 ] && cp -f $IN_PWD/conf/$1 $2
 }
 
 function file_cpv {
-    cd $IN_PWD/conf
-    [ -f $1 ] && cp -f $1 $2
+    [ -f $IN_PWD/conf/$1 ] && cp -f $IN_PWD/conf/$1 $2
 }
 
 function file_rm {
