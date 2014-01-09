@@ -1,9 +1,10 @@
 # php install function
 function php_ins {
-    local IN_LOG=$LOGPATH/${logpre}_php_install.log
     if [[ -n $SERVER ]]; then
+        local IN_LOG=$LOGPATH/${logpre}_${SERVER}_php_install.log
         local install_lock=/tmp/${SERVER}-php_install.lock
     else
+        local IN_LOG=$LOGPATH/${logpre}_php_install.log
         local install_lock=/tmp/php_install.lock
     fi
     echo
